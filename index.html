@@ -826,34 +826,33 @@ function calcAll(reg, typ, own, dRate, dIns, dVal, inf, pt, rentPct, dRates) {
   const isUnit = typ === 'unit';
   const infM = 1 + inf;
 
-  function ptCost(base, newV) { return base + (newV - base) * pt; }
-
   // Market rent is the anchor -set by demand, not costs
   const marketRentWk = r.rent[typ] * (rentPct || 1);
   const marketRentAnn = marketRentWk * 52;
 
-  // Raw costs (annual)
+  // Raw costs (annual) -actual costs, NOT affected by pass-through
+  // Pass-through only affects how much of the cost increase flows into rent
   const raw = {};
-  raw.mortgage     = own==='social' ? { base: 0, after: 0 } : { base: mortBal * BASE_RATE, after: ptCost(mortBal * BASE_RATE, mortBal * effRate) };
+  raw.mortgage     = own==='social' ? { base: 0, after: 0 } : { base: mortBal * BASE_RATE, after: mortBal * effRate };
   raw.stampDuty    = { base: own==='social' ? 0 : (baseVal*(r.stampPct||0))/HOLD_YRS, after: own==='social' ? 0 : (baseVal*(r.stampPct||0))/HOLD_YRS };
-  raw.bldIns       = { base: baseVal * BASE_INS * r.iRisk,          after: ptCost(baseVal * BASE_INS * r.iRisk, propVal * BASE_INS * r.iRisk * (1 + dIns)) };
+  raw.bldIns       = { base: baseVal * BASE_INS * r.iRisk,          after: propVal * BASE_INS * r.iRisk * (1 + dIns) };
   raw.llIns        = { base: own==='social' ? 0 : 420,              after: own==='social' ? 0 : 420 };
-  raw.rates        = { base: r.rates,                                after: ptCost(r.rates, r.rates * (1 + (dRates || 0))) };
+  raw.rates        = { base: r.rates,                                after: r.rates * (1 + (dRates || 0)) };
 
   let ltBase = 0, ltAfter = 0;
   const lvBase = baseVal * 0.6 * o.ltM, lvAfter = propVal * 0.6 * o.ltM;
   if (lvBase > r.ltThr) ltBase = r.ltBase + (lvBase - r.ltThr) * r.ltRate;
   if (lvAfter > r.ltThr) ltAfter = r.ltBase + (lvAfter - r.ltThr) * r.ltRate;
-  raw.landTax = { base: ltBase, after: ptCost(ltBase, ltAfter) };
+  raw.landTax = { base: ltBase, after: ltAfter };
 
-  raw.water   = { base: r.water,                          after: ptCost(r.water, r.water * infM) };
-  raw.maint   = { base: own==='social' ? 4500 : 3500,     after: ptCost(own==='social' ? 4500 : 3500, (own==='social' ? 4500 : 3500) * infM) };
-  raw.strata  = { base: isUnit ? r.strata : 0,            after: isUnit ? ptCost(r.strata, r.strata * infM) : 0 };
-  raw.comply  = { base: r.comply,                          after: ptCost(r.comply, r.comply * infM) };
-  raw.admin   = { base: own==='social' ? 0 : 900,         after: own==='social' ? 0 : ptCost(900, 900 * infM) };
-  raw.power   = { base: TC.power,    after: ptCost(TC.power, TC.power * infM) };
-  raw.internet= { base: TC.internet, after: ptCost(TC.internet, TC.internet * infM) };
-  raw.garden  = { base: TC.garden,   after: ptCost(TC.garden, TC.garden * infM) };
+  raw.water   = { base: r.water,                          after: r.water * infM };
+  raw.maint   = { base: own==='social' ? 4500 : 3500,     after: (own==='social' ? 4500 : 3500) * infM };
+  raw.strata  = { base: isUnit ? r.strata : 0,            after: isUnit ? r.strata * infM : 0 };
+  raw.comply  = { base: r.comply,                          after: r.comply * infM };
+  raw.admin   = { base: own==='social' ? 0 : 900,         after: own==='social' ? 0 : 900 * infM };
+  raw.power   = { base: TC.power,    after: TC.power * infM };
+  raw.internet= { base: TC.internet, after: TC.internet * infM };
+  raw.garden  = { base: TC.garden,   after: TC.garden * infM };
   raw.letting = { base: own==='social' ? 0 : 650, after: own==='social' ? 0 : 650 };
 
   // Management fee & vacancy are % of market rent (not cost-derived)
@@ -880,7 +879,7 @@ function calcAll(reg, typ, own, dRate, dIns, dVal, inf, pt, rentPct, dRates) {
   const afterLLCosts = sumLL('after');
   const costIncrease = afterLLCosts - baseLLCosts;
   const denom = Math.max(0.5, 1 - effMg - vacPct);
-  const rentIncrease = costIncrease / denom; // snowball amplification
+  const rentIncrease = (costIncrease * pt) / denom; // pass-through x snowball amplification
   const afterRentAnn = marketRentAnn + rentIncrease;
   const afterRentWk = afterRentAnn / 52;
 
@@ -943,29 +942,29 @@ function calcFlat(reg, typ, own, dRate, dIns, dVal, inf, pt, rentPct, dRates) {
   // Flat fee: $40/wk instead of % of rent
   const flatFeeAnn = 40 * 52;
   const costIncrease = afterLLCosts - baseLLCosts;
-  // With flat fee, cost increase passes through without snowball amplification
-  const afterRentAnn = marketRentAnn + costIncrease / Math.max(0.5, 1 - vacPct);
+  // With flat fee, cost increase passes through with pass-through but without snowball amplification
+  const afterRentAnn = marketRentAnn + (costIncrease * pt) / Math.max(0.5, 1 - vacPct);
   return afterRentAnn / 52;
 }
 
 function calcSingleCost(k, r, o, baseVal, propVal, mortBal, effRate, isUnit, infM, pt, own, dRates) {
-  function ptC(b, n) { return b + (n - b) * pt; }
+  // Returns actual cost (no pass-through) -pt is applied at the rent level, not here
   switch(k) {
-    case 'mortgage': return own==='social' ? 0 : ptC(mortBal * BASE_RATE, mortBal * effRate);
+    case 'mortgage': return own==='social' ? 0 : mortBal * effRate;
     case 'stampDuty': return own==='social' ? 0 : (baseVal*(r.stampPct||0))/HOLD_YRS;
-    case 'bldIns': return ptC(baseVal * BASE_INS * r.iRisk, propVal * BASE_INS * r.iRisk * (1+(+$('slIns').value/100)));
+    case 'bldIns': return propVal * BASE_INS * r.iRisk * (1+(+$('slIns').value/100));
     case 'llIns': return own==='social' ? 0 : 420;
-    case 'rates': return ptC(r.rates, r.rates * (1 + (dRates || 0)));
+    case 'rates': return r.rates * (1 + (dRates || 0));
     case 'landTax': { const lv = propVal * 0.6 * o.ltM; return lv > r.ltThr ? r.ltBase + (lv - r.ltThr) * r.ltRate : 0; }
-    case 'water': return ptC(r.water, r.water * infM);
-    case 'maint': return ptC(own==='social'?4500:3500, (own==='social'?4500:3500)*infM);
-    case 'strata': return isUnit ? ptC(r.strata, r.strata * infM) : 0;
-    case 'comply': return ptC(r.comply, r.comply * infM);
-    case 'admin': return own==='social' ? 0 : ptC(900, 900*infM);
+    case 'water': return r.water * infM;
+    case 'maint': return (own==='social'?4500:3500)*infM;
+    case 'strata': return isUnit ? r.strata * infM : 0;
+    case 'comply': return r.comply * infM;
+    case 'admin': return own==='social' ? 0 : 900*infM;
     case 'letting': return own==='social' ? 0 : 650;
-    case 'power': return ptC(TC.power, TC.power * infM);
-    case 'internet': return ptC(TC.internet, TC.internet * infM);
-    case 'garden': return ptC(TC.garden, TC.garden * infM);
+    case 'power': return TC.power * infM;
+    case 'internet': return TC.internet * infM;
+    case 'garden': return TC.garden * infM;
     default: return 0;
   }
 }
