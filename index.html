@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Cost of a Roof v3.4 — AU/NZ Rental Cost Model</title>
+<title>The Cost of a Roof Over Your Head -AU/NZ Rental Cost Model</title>
 <style>
 :root {
   --charcoal: #2d2926;
@@ -447,8 +447,9 @@ footer a { color: var(--terracotta); text-decoration: none; }
 <div class="container">
 
 <header>
-  <h1>The Cost of a Roof</h1>
-  <p class="subtitle">Every property has costs. They don't disappear &mdash; they shift between the landlord (your rent), you (your bills), and the taxpayer. Here's how.</p>
+  <h1>The Cost of a Roof Over Your Head</h1>
+  <p class="subtitle">Every property has costs. They don't disappear -they shift between the landlord (your rent), you (your bills), and the taxpayer. Here's how.</p>
+  <p style="font-size:0.78rem;color:var(--text-light);margin-bottom:0.8rem;">Default values are based on a typical 3-bedroom property at median prices for the selected region. Adjust the sliders to model different scenarios.</p>
   <div class="summary-bar">
     <span>Region: <strong id="sumRegion">Queensland</strong></span>
     <span>Before: <strong id="sumBefore">$0/wk</strong></span>
@@ -461,7 +462,7 @@ footer a { color: var(--terracotta); text-decoration: none; }
 <div class="story-section">
   <h2>The hidden maths of rent</h2>
   <div id="storyBody">
-    <p class="story-intro">A house has costs &mdash; mortgage, insurance, rates, maintenance, management. <strong>These costs exist whether the owner lives in it or rents it out.</strong> When a landlord rents a property, they need the rent to cover these costs plus a return on their investment. When costs go up, rents go up. But here's the catch: some charges are <em>percentages</em> (like the property manager's fee), so they grow automatically when rent rises &mdash; the <strong>snowball effect</strong>.</p>
+    <p class="story-intro">A house has costs -mortgage, insurance, rates, maintenance, management. <strong>These costs exist whether the owner lives in it or rents it out.</strong> When a landlord rents a property, they need the rent to cover these costs plus a return on their investment. When costs go up, rents go up. But here's the catch: some charges are <em>percentages</em> (like the property manager's fee), so they grow automatically when rent rises -the <strong>snowball effect</strong>.</p>
     <p class="story-intro">Some costs are paid by the landlord (built into your rent). Some you pay directly (power, internet). Some the taxpayer covers (negative gearing offsets, social housing). <strong>Toggle any cost below to see what happens when it shifts between bearers.</strong></p>
   </div>
   <button class="story-toggle" onclick="let b=document.getElementById('storyBody');b.style.display=b.style.display==='none'?'block':'none';this.textContent=b.style.display==='none'?'Show introduction':'Hide introduction'">Hide introduction</button>
@@ -509,7 +510,7 @@ footer a { color: var(--terracotta); text-decoration: none; }
     <div class="slider-grp"><label>Interest Rate Change</label>
       <div class="sl-row"><input type="range" id="slRate" min="-200" max="200" value="0" step="25" oninput="go()"><span class="sl-val" id="vRate">+0.00%</span></div>
     </div>
-    <div class="slider-grp"><label>Insurance Increase</label>
+    <div class="slider-grp"><label>Insurance Increase <span style="font-weight:400;font-size:0.68rem;color:var(--text-light);">(one-off, not per year)</span></label>
       <div class="sl-row"><input type="range" id="slIns" min="0" max="120" value="0" step="5" oninput="go()"><span class="sl-val" id="vIns">+0%</span></div>
     </div>
   </div>
@@ -517,7 +518,7 @@ footer a { color: var(--terracotta); text-decoration: none; }
     <div class="slider-grp"><label>Council Rates Increase <span id="ratesHint" style="font-weight:400;font-size:0.72rem;color:var(--text-light);"></span></label>
       <div class="sl-row"><input type="range" id="slRates" min="0" max="60" value="0" step="5" oninput="go()"><span class="sl-val" id="vRates">+0%</span></div>
     </div>
-    <div class="slider-grp"><label>Property Value Change</label>
+    <div class="slider-grp"><label>Property Value Change <span style="font-weight:400;font-size:0.68rem;color:var(--text-light);">(one-off, not per year)</span></label>
       <div class="sl-row"><input type="range" id="slVal" min="-20" max="40" value="0" step="5" oninput="go()"><span class="sl-val" id="vVal">+0%</span></div>
     </div>
   </div>
@@ -551,11 +552,11 @@ footer a { color: var(--terracotta); text-decoration: none; }
   <div class="ctrl-info" style="margin-top:10px;">
     <details><summary>What do the sliders and presets do?</summary>
       <dl class="info-grid">
-        <div><dt>Market Rent</dt><dd>Sets the weekly rent as a % of the regional median. This is what tenants actually pay — determined by demand, not landlord costs.</dd></div>
+        <div><dt>Market Rent</dt><dd>Sets the weekly rent as a % of the regional median. This is what tenants actually pay -determined by demand, not landlord costs.</dd></div>
         <div><dt>Interest Rate Change</dt><dd>Adjusts the mortgage rate up or down from the 6.8% baseline. Affects the largest landlord cost (mortgage interest).</dd></div>
-        <div><dt>Insurance Increase</dt><dd>Percentage increase in building insurance premiums above baseline. Higher in cyclone/earthquake zones.</dd></div>
+        <div><dt>Insurance Increase</dt><dd>One-off percentage increase in building insurance premiums above baseline (not per year). Models a scenario like a cyclone or flood event pushing premiums up. Higher in cyclone/earthquake zones.</dd></div>
         <div><dt>Council Rates Increase</dt><dd>Percentage increase in council rates above current levels. NZ rates are rising significantly faster than AU due to water infrastructure costs.</dd></div>
-        <div><dt>Property Value Change</dt><dd>Shifts property value up or down. Affects insurance premiums, land tax, stamp duty amortisation, and depreciation.</dd></div>
+        <div><dt>Property Value Change</dt><dd>One-off shift in property value up or down (not per year). Affects insurance premiums, land tax, stamp duty amortisation, and depreciation. Models a market boom or correction.</dd></div>
         <div><dt>General Inflation</dt><dd>Annual inflation rate applied to operating costs (maintenance, water, compliance, strata, admin). Does not affect mortgage or insurance.</dd></div>
         <div><dt>Cost Pass-Through</dt><dd>How much of cost increases the landlord passes to tenants. 100% = full pass-through. Below 100% = landlord absorbs some. Above 100% = landlord adds margin.</dd></div>
       </dl>
@@ -616,7 +617,7 @@ footer a { color: var(--terracotta); text-decoration: none; }
 
 <!-- Scenario Plotter -->
 <div class="scenario-section">
-  <h3>5-Year Rent Trajectory — Policy Scenarios</h3>
+  <h3>5-Year Rent Trajectory -Policy Scenarios</h3>
   <div class="scenario-controls">
     <label>Y-axis: <select id="scYAxis" onchange="renderScenarios()">
       <option value="rent" selected>Weekly Rent ($)</option>
@@ -636,16 +637,16 @@ footer a { color: var(--terracotta); text-decoration: none; }
 
 <!-- Policy Implications -->
 <div class="policy-implications" id="policyImplications" style="display:none;">
-  <h3>What does this mean? — Policy Trade-offs</h3>
+  <h3>What does this mean? -Policy Trade-offs</h3>
   <div id="policyCards"></div>
-  <p class="policy-impl-note">These are simplified projections. Real-world outcomes depend on enforcement, market conditions, housing supply, and behavioural responses that models cannot fully predict. Every policy involves trade-offs — there are no cost-free solutions.</p>
+  <p class="policy-impl-note">These are simplified projections. Real-world outcomes depend on enforcement, market conditions, housing supply, and behavioural responses that models cannot fully predict. Every policy involves trade-offs -there are no cost-free solutions.</p>
 </div>
 
 <!-- Caveats -->
 <div class="caveats">
-  <p><strong>This tool shows how costs are allocated</strong> &mdash; not what rent should be. Actual rent is also driven by supply and demand in your local market.</p>
-  <p><strong>Supply, demand, and migration:</strong> Low vacancy rates, population growth, and immigration volumes all create upward pressure on rents independently of costs. This tool focuses on the cost-push side &mdash; the floor landlords need to cover.</p>
-  <p>All figures are approximate and based on typical properties. Tax benefits are simplified. NZ figures are in NZD.</p>
+  <p><strong>This tool shows how costs are allocated</strong> -not what rent should be. Actual rent is also driven by supply and demand in your local market.</p>
+  <p><strong>Supply, demand, and migration:</strong> Low vacancy rates, population growth, and immigration volumes all create upward pressure on rents independently of costs. This tool focuses on the cost-push side -the floor landlords need to cover.</p>
+  <p>All figures are approximate and based on a typical 3-bedroom property at regional median prices. Tax benefits are simplified. NZ figures are in NZD.</p>
   <p>Data verified March 2026. Interest rates, insurance premiums, and land tax thresholds change regularly.</p>
   <p>This tool is educational, not financial advice.</p>
 </div>
@@ -653,7 +654,7 @@ footer a { color: var(--terracotta); text-decoration: none; }
 </div>
 
 <footer>
-  <p>The Cost of a Roof v3.3 &mdash; AU/NZ &mdash; Data verified March 2026</p>
+  <p>The Cost of a Roof Over Your Head -AU/NZ -Data verified March 2026</p>
   <p style="margin-top:3px">Companion to the <a href="supply-chain-inflation.html">Supply Chain Inflation Visualizer</a></p>
 </footer>
 
@@ -679,7 +680,7 @@ const R = {
     iRisk:0.9, mgmt:0.059, medInc:1759,
     rent:{house:560,unit:510}, val:{house:780000,unit:580000},
     strata:5200, rates:2100, ratesAvg:0.04, water:1200, comply:500, stampPct:0.055,
-    wNote:"Landlord pays — built into rent",
+    wNote:"Landlord pays -built into rent",
     ltNote:"COVID debt levy (2024-2033): $50k threshold. VRLT expanded statewide Jan 2025.",
     reforms:["No-grounds evictions ended","COVID debt levy on land tax (2024-2033)","VRLT expanded statewide Jan 2025","Rent increases limited to once per year"],
   },
@@ -752,18 +753,18 @@ const TOGGLEABLE = ['water','power','internet','garden'];
 
 const COST_DEFS = [
   // key, label, group, sub-label, tooltip, bearer-fixed?
-  { k:'mortgage',      lb:'Mortgage Interest',       grp:'financing',  sub:'Rate x principal',         tip:'Interest on the home loan. Rate-sensitive — small changes on large principals create big impacts.' },
+  { k:'mortgage',      lb:'Mortgage Interest',       grp:'financing',  sub:'Rate x principal',         tip:'Interest on the home loan. Rate-sensitive -small changes on large principals create big impacts.' },
   { k:'stampDuty',     lb:'Stamp Duty (amortised)',   grp:'financing',  sub:'Purchase tax / 10yr hold', tip:'One-off government tax on purchase, spread over assumed 10-year hold. NZ has no stamp duty.' },
   { k:'rates',         lb:'Council Rates',            grp:'government', sub:'Based on land valuation',  tip:'Local council charge for roads, rubbish, parks, community services.' },
   { k:'landTax',       lb:'Land Tax',                 grp:'government', sub:'State threshold-based',    tip:'State charge on land value. Most single-property investors pay $0 (VIC is the exception).' },
-  { k:'water',         lb:'Water',                    grp:'government', sub:'',                         tip:'Usage-based charges. Who pays varies by region and is changing — see cost shift notes.', tog:true },
+  { k:'water',         lb:'Water',                    grp:'government', sub:'',                         tip:'Usage-based charges. Who pays varies by region and is changing -see cost shift notes.', tog:true },
   { k:'bldIns',        lb:'Building Insurance',       grp:'property',   sub:'% of value + risk',        tip:'Covers building damage. Costs more in flood, cyclone, or earthquake zones.' },
   { k:'llIns',         lb:'Landlord Insurance',       grp:'property',   sub:'Flat + risk factors',      tip:'Covers tenant-related risks: unpaid rent, property damage. Separate from building insurance.' },
   { k:'maint',         lb:'Maintenance',              grp:'property',   sub:'Trades + materials',       tip:'Repairs, tradespeople, materials. Follows general inflation but trades costs rising faster.' },
   { k:'strata',        lb:'Strata / Body Corp',       grp:'property',   sub:'Units only',               tip:'For units: shared building insurance, common areas, maintenance. $0 for houses.' },
   { k:'comply',        lb:'Compliance',               grp:'property',   sub:'Safety + standards',       tip:'Smoke alarms, pool fences, electrical checks. Higher in NZ (Healthy Homes standards).' },
-  { k:'admin',         lb:'Admin & Professional',     grp:'management', sub:'Tax, inspections, paperwork', tip:'Tax returns, property inspections, maintenance coordination, insurance claims, compliance paperwork. The cost of administering a rental — invisible to most tenants but unavoidable.' },
-  { k:'mgmtFee',       lb:'Management Fee',           grp:'management', sub:'% of rent (snowball)',     tip:'Property manager\'s fee — a percentage of rent. When rent rises, they earn more automatically. This is the snowball.' },
+  { k:'admin',         lb:'Admin & Professional',     grp:'management', sub:'Tax, inspections, paperwork', tip:'Tax returns, property inspections, maintenance coordination, insurance claims, compliance paperwork. The cost of administering a rental -invisible to most tenants but unavoidable.' },
+  { k:'mgmtFee',       lb:'Management Fee',           grp:'management', sub:'% of rent (snowball)',     tip:'Property manager\'s fee -a percentage of rent. When rent rises, they earn more automatically. This is the snowball.' },
   { k:'letting',       lb:'Letting Fee',              grp:'management', sub:'Per re-tenancy',           tip:'Cost to advertise and find new tenants. Spread across average tenancy length.' },
   { k:'vacancy',       lb:'Vacancy',                  grp:'management', sub:'Empty weeks buffer',       tip:'Empty weeks between tenants. Landlords factor this buffer into required rent.' },
   { k:'power',         lb:'Power / Electricity',      grp:'tenant',     sub:'~$45/wk',                  tip:'Household electricity. Almost always paid directly by tenant.', tog:true },
@@ -797,7 +798,7 @@ function calcAll(reg, typ, own, dRate, dIns, dVal, inf, pt, rentPct, dRates) {
 
   function ptCost(base, newV) { return base + (newV - base) * pt; }
 
-  // Market rent is the anchor — set by demand, not costs
+  // Market rent is the anchor -set by demand, not costs
   const marketRentWk = r.rent[typ] * (rentPct || 1);
   const marketRentAnn = marketRentWk * 52;
 
@@ -964,8 +965,8 @@ function go() {
   const rAvg = R[reg].ratesAvg;
   $('ratesHint').textContent = '(avg ' + (rAvg*100).toFixed(1) + '%/yr)';
   const rCtx = reg === 'nz'
-    ? 'NZ avg 8.4%/yr — water infrastructure costs uncapped under proposed govt rates cap. Wellington: separate water bills from Jul 2026.'
-    : 'AU avg ~4%/yr — varies by council area';
+    ? 'NZ avg 8.4%/yr -water infrastructure costs uncapped under proposed govt rates cap. Wellington: separate water bills from Jul 2026.'
+    : 'AU avg ~4%/yr -varies by council area';
   $('ratesContext').textContent = dRates > 0 ? rCtx : '';
 
   // Update rent slider display
@@ -1051,7 +1052,7 @@ function renderPanel(containerId, d, which, maxAnn) {
           const cls = deltaWk > 0 ? 'up' : 'down';
           chgHtml = `<span class="cr-chg ${cls}">${deltaWk>0?'+':''}$${Math.round(deltaWk)}</span>`;
         } else {
-          chgHtml = `<span class="cr-chg">&mdash;</span>`;
+          chgHtml = `<span class="cr-chg"> -</span>`;
         }
       } else {
         chgHtml = `<span class="cr-chg"></span>`;
@@ -1215,7 +1216,7 @@ function renderSnowball(d, pt) {
     const sav = d.aftRent - flatR;
     fr.style.display = 'block';
     fr.textContent = sav > 1
-      ? `If management were $40/wk flat instead of ${(d.effMg*100).toFixed(1)}%, rent would be $${Math.round(flatR)}/wk — $${Math.round(sav)}/wk less.`
+      ? `If management were $40/wk flat instead of ${(d.effMg*100).toFixed(1)}%, rent would be $${Math.round(flatR)}/wk -$${Math.round(sav)}/wk less.`
       : 'At current settings, a flat $40/wk fee produces similar rent.';
   } else { fr.style.display = 'none'; }
 }
@@ -1233,9 +1234,9 @@ function renderControlInfo(reg, typ, own) {
 
   // Owner info
   const ownerDescs = {
-    individual: 'Single property owner — standard mortgage rate, full management fees, standard vacancy allowance. Most common landlord type in AU/NZ.',
-    portfolio: 'Investor with 3+ properties — slightly better mortgage rate (-0.2%), discounted management fees (82%), lower vacancy (2%), but 2.5x land tax multiplier on aggregated holdings.',
-    social: 'Government/community housing provider — no commercial mortgage, no management fees, no vacancy, no stamp duty, no land tax. Rent set at ~25% of tenant income, not market rate.',
+    individual: 'Single property owner -standard mortgage rate, full management fees, standard vacancy allowance. Most common landlord type in AU/NZ.',
+    portfolio: 'Investor with 3+ properties -slightly better mortgage rate (-0.2%), discounted management fees (82%), lower vacancy (2%), but 2.5x land tax multiplier on aggregated holdings.',
+    social: 'Government/community housing provider -no commercial mortgage, no management fees, no vacancy, no stamp duty, no land tax. Rent set at ~25% of tenant income, not market rate.',
   };
   const ownerItems = {
     individual: [
@@ -1264,14 +1265,14 @@ function renderControlInfo(reg, typ, own) {
   let html = '';
 
   // Region details
-  html += `<details><summary>About ${r.nm} — key model settings</summary>`;
+  html += `<details><summary>About ${r.nm} -key model settings</summary>`;
   html += '<dl class="info-grid">';
   html += `<div><dt>Median rent (${typ === 'house' ? 'house' : 'unit'})</dt><dd>${fmt(r.rent[typ])}/wk</dd></div>`;
   html += `<div><dt>Property value</dt><dd>${fmt(r.val[typ])}</dd></div>`;
   html += `<div><dt>Median household income</dt><dd>${fmt(r.medInc)}/wk</dd></div>`;
   html += `<div><dt>Council rates</dt><dd>${fmt(r.rates)}/yr (avg +${(r.ratesAvg*100).toFixed(1)}%/yr)</dd></div>`;
   html += `<div><dt>Insurance risk factor</dt><dd>${r.iRisk}x national baseline</dd></div>`;
-  html += `<div><dt>Water</dt><dd>${r.wPaid === 'tenant' ? 'Tenant pays usage' : r.wPaid === 'landlord' ? 'Landlord pays (built into rent)' : 'Varies by lease'} — ${fmt(r.water)}/yr</dd></div>`;
+  html += `<div><dt>Water</dt><dd>${r.wPaid === 'tenant' ? 'Tenant pays usage' : r.wPaid === 'landlord' ? 'Landlord pays (built into rent)' : 'Varies by lease'} -${fmt(r.water)}/yr</dd></div>`;
   html += `<div><dt>Stamp duty</dt><dd>${r.stampPct ? (r.stampPct*100).toFixed(1) + '% (amortised over ' + HOLD_YRS + ' yrs)' : 'None'}</dd></div>`;
   html += `<div><dt>Land tax threshold</dt><dd>${r.ltThr === Infinity ? 'No land tax' : fmt(r.ltThr) + ' @ ' + (r.ltRate*100).toFixed(1) + '%'}</dd></div>`;
   html += `<div><dt>Rental losses</dt>${ringNote}</div>`;
@@ -1283,7 +1284,7 @@ function renderControlInfo(reg, typ, own) {
 
   // Property type details
   const typLabel = typ === 'house' ? 'House' : 'Unit / Apartment';
-  html += `<details><summary>About ${typLabel} — what changes</summary>`;
+  html += `<details><summary>About ${typLabel} -what changes</summary>`;
   html += '<dl class="info-grid">';
   html += `<div><dt>Median rent</dt><dd>${fmt(r.rent[typ])}/wk</dd></div>`;
   html += `<div><dt>Property value</dt><dd>${fmt(r.val[typ])}</dd></div>`;
@@ -1294,7 +1295,7 @@ function renderControlInfo(reg, typ, own) {
   html += '</details>';
 
   // Owner type details
-  html += `<details><summary>About ${o.lb} — model adjustments</summary>`;
+  html += `<details><summary>About ${o.lb} -model adjustments</summary>`;
   html += `<div class="info-note" style="font-style:normal;color:var(--text-secondary);padding-top:6px;">${ownerDescs[own]}</div>`;
   html += '<dl class="info-grid">';
   for (const [label, val] of ownerItems[own]) {
@@ -1319,10 +1320,10 @@ function renderShiftCallout(reg) {
     $('shiftTitle').textContent = 'Cost Shift: NZ Water Infrastructure';
     const wk = Math.round(r.waterNewAnn / 52);
     $('shiftContent').innerHTML = `
-      <p><strong>Wellington region:</strong> From July 2026, <strong>Tiaki Wai</strong> replaces Wellington Water. Property owners receive <span class="sc-hl">separate quarterly water bills</span> — no longer bundled in rates.</p>
+      <p><strong>Wellington region:</strong> From July 2026, <strong>Tiaki Wai</strong> replaces Wellington Water. Property owners receive <span class="sc-hl">separate quarterly water bills</span> -no longer bundled in rates.</p>
       <p>Average: <span class="sc-hl">~$${r.waterNewAnn.toLocaleString()}/yr ($${wk}/wk)</span>, projected ~$6,831/yr by 2036. Until meters are installed (2028-2030), <span class="sc-hl">landlord absorbs the full fixed charge</span>.</p>
-      <p class="sc-sm">The cost was previously funded through rates (invisible). Now it's a separate charge — but rates don't decrease by the same amount. Other NZ regions following: Hawke's Bay (Jul 2027), Hamilton, Auckland (already separate via Watercare).</p>
-      ${waterShifted ? `<p class="sc-sm">You've toggled water to "${bearers.water === 'T' ? 'Tenant pays' : 'Landlord pays'}" — see how the totals shift. <strong>The total cost of housing stays the same.</strong></p>` : ''}`;
+      <p class="sc-sm">The cost was previously funded through rates (invisible). Now it's a separate charge -but rates don't decrease by the same amount. Other NZ regions following: Hawke's Bay (Jul 2027), Hamilton, Auckland (already separate via Watercare).</p>
+      ${waterShifted ? `<p class="sc-sm">You've toggled water to "${bearers.water === 'T' ? 'Tenant pays' : 'Landlord pays'}" -see how the totals shift. <strong>The total cost of housing stays the same.</strong></p>` : ''}`;
   } else if (waterShifted) {
     sc.style.display = 'block';
     $('shiftTitle').textContent = 'Cost Shift: Water';
@@ -1330,7 +1331,7 @@ function renderShiftCallout(reg) {
     const toLabel = bearers.water === 'LL' ? 'included in rent (landlord)' : 'tenant\'s separate bill';
     $('shiftContent').innerHTML = `
       <p>Default for ${r.nm}: water is ${fromLabel}. You've shifted it to ${toLabel}.</p>
-      <p class="sc-sm">The cost doesn't disappear — it moves. When a cost shifts from "included in rent" to "separate bill", the landlord's costs decrease but the tenant picks up a new direct charge. <strong>Watch the totals at the bottom of each panel — the grand total stays the same.</strong></p>`;
+      <p class="sc-sm">The cost doesn't disappear -it moves. When a cost shifts from "included in rent" to "separate bill", the landlord's costs decrease but the tenant picks up a new direct charge. <strong>Watch the totals at the bottom of each panel -the grand total stays the same.</strong></p>`;
   } else {
     sc.style.display = 'none';
   }
@@ -1350,10 +1351,10 @@ const SCENARIOS = [
     id: 'no_snowball', lb: 'No snowball (flat fee)', isPolicy: false, alwaysOn: false,
     color: 'var(--blue-steel)', dash: '3,3',
     desc: 'Management as a flat $/wk fee based on property size, not a % of rent. Removes the compounding amplification.',
-    calc: (baseRent, yr, inf) => baseRent * Math.pow(1 + inf, yr), // grows at CPI only — no mgmt % amplification
+    calc: (baseRent, yr, inf) => baseRent * Math.pow(1 + inf, yr), // grows at CPI only -no mgmt % amplification
   },
   {
-    id: 'greens_nz', lb: 'NZ Greens — 2% rent cap', isPolicy: true,
+    id: 'greens_nz', lb: 'NZ Greens -2% rent cap', isPolicy: true,
     color: 'var(--sage-dark)', dash: '6,4',
     desc: 'Rents capped at 2% increase per year. Costs still rise at market rates.',
     source: 'rnz.co.nz/news/political/590598',
@@ -1368,10 +1369,10 @@ const SCENARIOS = [
   {
     id: 'cpi_cap', lb: 'CPI-linked cap', isPolicy: true,
     color: 'var(--amber-dark)', dash: '4,4',
-    desc: 'Rents can only rise at CPI — no margin, no snowball.',
+    desc: 'Rents can only rise at CPI -no margin, no snowball.',
     calc: (baseRent, yr, inf) => baseRent * Math.pow(1 + inf, yr),
     implications: {
-      tenant: 'Rent tracks inflation — real cost stays flat. No surprise spikes.',
+      tenant: 'Rent tracks inflation -real cost stays flat. No surprise spikes.',
       landlord: 'If property-specific costs (insurance, rates) rise faster than CPI, landlord absorbs the gap.',
       system: 'More moderate than a fixed cap. Still doesn\'t account for regional cost variation. May discourage investment in high-cost areas.',
     },
@@ -1379,7 +1380,7 @@ const SCENARIOS = [
   {
     id: 'freeze', lb: 'Rent freeze', isPolicy: true,
     color: 'var(--terracotta)', dash: '2,4',
-    desc: 'No rent increases for 5 years. Costs still rise — landlord cashflow deteriorates each year.',
+    desc: 'No rent increases for 5 years. Costs still rise -landlord cashflow deteriorates each year.',
     calc: (baseRent) => baseRent,
     implications: {
       tenant: 'Complete cost certainty. Existing tenants benefit most.',
@@ -1390,7 +1391,7 @@ const SCENARIOS = [
   {
     id: 'costs', lb: 'Landlord cost line', isPolicy: false, alwaysOn: true,
     color: 'var(--text-light)', dash: '8,3,2,3',
-    desc: 'What landlord costs actually are each year — the floor they need to cover.',
+    desc: 'What landlord costs actually are each year -the floor they need to cover.',
     isCostLine: true,
     calc: null,
   },
@@ -1539,7 +1540,7 @@ function renderScenarios() {
   const notes = activeNotes.map(s => `<strong>${s.lb}:</strong> ${s.desc}${s.source ? ' <em>(' + s.source + ')</em>' : ''}`);
   if (notes.length) {
     $('scenarioNote').innerHTML = notes.join('<br>') +
-      '<br><em>The grey cost line shows what the landlord actually needs to cover. When rent lines fall below it, the landlord is negatively geared — absorbing the gap or exiting the market.</em>';
+      '<br><em>The grey cost line shows what the landlord actually needs to cover. When rent lines fall below it, the landlord is negatively geared -absorbing the gap or exiting the market.</em>';
   } else {
     $('scenarioNote').innerHTML = '<em>Select a policy above to compare against market forces. The grey cost line shows the landlord\'s actual cost floor.</em>';
   }
@@ -1642,7 +1643,7 @@ function renderLLPosition(d) {
       ${taxNote}
     </div>
     <div>
-      <div class="ll-detail">${label} — ${verb} $${Math.abs(Math.round(cf))}/wk ($${Math.abs(Math.round(cfAnn)).toLocaleString()}/yr)</div>
+      <div class="ll-detail">${label} -${verb} $${Math.abs(Math.round(cf))}/wk ($${Math.abs(Math.round(cfAnn)).toLocaleString()}/yr)</div>
       ${cf < 0 ? '<button class="cap-growth-toggle" onclick="toggleCapGrowth()">Why accept a loss?</button>' : ''}
     </div>`;
 
@@ -1688,7 +1689,7 @@ function renderRentIncome(d) {
   const pctRent = (rent / income) * 100;
   const pctTotal = (totalHousing / income) * 100;
   const color = pctTotal < 30 ? 'rib-green' : pctTotal < 40 ? 'rib-amber' : 'rib-red';
-  const stress = pctTotal >= 30 ? ' <span class="rib-stress">— housing stress</span>' : '';
+  const stress = pctTotal >= 30 ? ' <span class="rib-stress">- housing stress</span>' : '';
 
   el.innerHTML = `
     <div class="rib-header">
@@ -1713,9 +1714,9 @@ function renderPolicyCallout(reg) {
   el.style.display = 'block';
   const items = r.reforms.map(s => '<li>' + s + '</li>').join('');
   el.innerHTML = `
-    <h4>Recent Policy Changes — ${r.nm}</h4>
+    <h4>Recent Policy Changes -${r.nm}</h4>
     <ul>${items}</ul>
-    <p class="policy-note">The rental landscape is undergoing significant reform across AU/NZ. Frequent policy changes create uncertainty for all parties — landlords, tenants, and property managers. This uncertainty often translates to defensive pricing, higher management overhead, and compliance buffers built into costs. These are real expenses that flow through to rent, even when the reforms are designed to help tenants.</p>`;
+    <p class="policy-note">The rental landscape is undergoing significant reform across AU/NZ. Frequent policy changes create uncertainty for all parties -landlords, tenants, and property managers. This uncertainty often translates to defensive pricing, higher management overhead, and compliance buffers built into costs. These are real expenses that flow through to rent, even when the reforms are designed to help tenants.</p>`;
 }
 
 // ============================================================
