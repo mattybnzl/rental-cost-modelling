@@ -1437,10 +1437,18 @@ function renderScenarios() {
   const yAxis = $('scYAxis').value;
   const showFlat = $('scFlatFee').checked;
 
-  const baseRentWk = r.rent[typ] * (rentPct || 1);
   const effMg = r.mgmtGST ? r.mgmt * o.mgmtM * (1 + r.mgmtGST) : r.mgmt * o.mgmtM;
   const vacPct = o.vac;
   const mgAmp = 1 / Math.max(0.5, 1 - effMg - vacPct);
+
+  // Use the slider-adjusted "after" rent as year-0 base so all sliders feed into the plotter
+  const dRate = +$('slRate').value / 10000;
+  const dIns = +$('slIns').value / 100;
+  const dRates = +$('slRates').value / 100;
+  const dVal = +$('slVal').value / 100;
+  const pt = +$('slPass').value / 100;
+  const dCurrent = calcAll(reg, typ, own, dRate, dIns, dVal, inf, pt, rentPct, dRates);
+  const baseRentWk = dCurrent.aftRent;
 
   // Show/hide no_snowball based on checkbox
   scenarioVisibility['no_snowball'] = showFlat;
