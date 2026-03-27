@@ -547,6 +547,16 @@ footer a { color: var(--terracotta); text-decoration: none; }
     </div>
   </div>
   <div class="ctrl-row">
+    <div class="slider-grp"><label>Capital Reserve <span style="font-weight:400;font-size:0.68rem;color:var(--text-light);">(unplanned maintenance, $/yr)</span></label>
+      <div class="sl-row"><input type="range" id="slCapRes" min="0" max="5000" value="0" step="250" oninput="go()"><span class="sl-val" id="vCapRes">$0/yr</span></div>
+    </div>
+    <div class="slider-grp" style="display:flex;align-items:flex-end;">
+      <div style="font-size:0.7rem;color:var(--text-light);line-height:1.4;">
+        HWC $2.5-4.5k &nbsp;|&nbsp; Aircon $3-8k &nbsp;|&nbsp; Roof $5-15k &nbsp;|&nbsp; Re-stumping $10-30k
+      </div>
+    </div>
+  </div>
+  <div class="ctrl-row">
     <div class="slider-grp"><label>General Inflation</label>
       <div class="sl-row"><input type="range" id="slInf" min="0" max="15" value="4" step="1" oninput="go()"><span class="sl-val" id="vInf">4%</span></div>
     </div>
@@ -580,6 +590,7 @@ footer a { color: var(--terracotta); text-decoration: none; }
         <div><dt>Interest Rate Change</dt><dd>Adjusts the mortgage rate up or down from the 6.8% baseline. Affects the largest landlord cost (mortgage interest).</dd></div>
         <div><dt>Insurance Increase</dt><dd>One-off percentage increase in building insurance premiums above baseline (not per year). Models a scenario like a cyclone or flood event pushing premiums up. Higher in cyclone/earthquake zones.</dd></div>
         <div><dt>Council Rates Increase</dt><dd>Percentage increase in council rates above current levels. NZ rates are rising significantly faster than AU due to water infrastructure costs.</dd></div>
+        <div><dt>Capital Reserve</dt><dd>Annual amount provisioned for major unplanned repairs and replacements (e.g. hot water cylinder, aircon, roof). Even if nothing breaks in a given year, prudent landlords set money aside. Default $0 - slide up to model the cost floor this adds to rent.</dd></div>
         <div><dt>Property Value Change</dt><dd>One-off shift in property value up or down (not per year). Affects insurance premiums, land tax, stamp duty amortisation, and depreciation. Models a market boom or correction.</dd></div>
         <div><dt>General Inflation</dt><dd>Annual inflation rate applied to operating costs (maintenance, water, compliance, strata, admin). Does not affect mortgage or insurance.</dd></div>
         <div><dt>Cost Pass-Through</dt><dd>How much of cost increases the landlord passes to tenants. 100% = full pass-through. Below 100% = landlord absorbs some. Above 100% = landlord adds margin.</dd></div>
@@ -771,7 +782,7 @@ function initBearers(reg) {
     bldIns: 'LL', llIns: 'LL',
     rates: 'LL', landTax: 'LL',
     water: r.wPaid === 'landlord' ? 'LL' : r.wPaid === 'tenant' ? 'T' : 'LL',
-    maint: 'LL', strata: 'LL', comply: 'LL',
+    maint: 'LL', strata: 'LL', comply: 'LL', capRes: 'LL',
     admin: 'LL', mgmtFee: 'LL', letting: 'LL', vacancy: 'LL',
     power: 'T', internet: 'T', garden: 'T',
     taxBenefit: 'G',
@@ -793,6 +804,7 @@ const COST_DEFS = [
   { k:'maint',         lb:'Maintenance',              grp:'property',   sub:'Trades + materials',       tip:'Repairs, tradespeople, materials. Follows general inflation but trades costs rising faster.' },
   { k:'strata',        lb:'Strata / Body Corp',       grp:'property',   sub:'Units only',               tip:'For units: shared building insurance, common areas, maintenance. $0 for houses.' },
   { k:'comply',        lb:'Compliance',               grp:'property',   sub:'Safety + standards',       tip:'Smoke alarms, pool fences, electrical checks. Higher in NZ (Healthy Homes standards).' },
+  { k:'capRes',        lb:'Capital Reserve',          grp:'property',   sub:'Unplanned maintenance',    tip:'Annual provisioning for major unplanned costs: hot water cylinder $2.5-4.5k, aircon $3-8k, roof $5-15k, re-stumping $10-30k. Even $0 breakdowns in year 1, provisioning adds a real cost floor.' },
   { k:'admin',         lb:'Admin & Professional',     grp:'management', sub:'Tax, inspections, paperwork', tip:'Tax returns, property inspections, maintenance coordination, insurance claims, compliance paperwork. The cost of administering a rental -invisible to most tenants but unavoidable.' },
   { k:'mgmtFee',       lb:'Management Fee',           grp:'management', sub:'% of rent (snowball)',     tip:'Property manager\'s fee -a percentage of rent. When rent rises, they earn more automatically. This is the snowball.' },
   { k:'letting',       lb:'Letting Fee',              grp:'management', sub:'Per re-tenancy',           tip:'Cost to advertise and find new tenants. Spread across average tenancy length.' },
@@ -849,6 +861,8 @@ function calcAll(reg, typ, own, dRate, dIns, dVal, inf, pt, rentPct, dRates) {
   raw.maint   = { base: own==='social' ? 4500 : 3500,     after: (own==='social' ? 4500 : 3500) * infM };
   raw.strata  = { base: isUnit ? r.strata : 0,            after: isUnit ? r.strata * infM : 0 };
   raw.comply  = { base: r.comply,                          after: r.comply * infM };
+  const capResAnn = +$('slCapRes').value;
+  raw.capRes  = { base: capResAnn,                          after: capResAnn * infM };
   raw.admin   = { base: own==='social' ? 0 : 900,         after: own==='social' ? 0 : 900 * infM };
   raw.power   = { base: TC.power,    after: TC.power * infM };
   raw.internet= { base: TC.internet, after: TC.internet * infM };
@@ -960,6 +974,7 @@ function calcSingleCost(k, r, o, baseVal, propVal, mortBal, effRate, isUnit, inf
     case 'maint': return (own==='social'?4500:3500)*infM;
     case 'strata': return isUnit ? r.strata * infM : 0;
     case 'comply': return r.comply * infM;
+    case 'capRes': return +$('slCapRes').value * infM;
     case 'admin': return own==='social' ? 0 : 900*infM;
     case 'letting': return own==='social' ? 0 : 650;
     case 'power': return TC.power * infM;
@@ -986,6 +1001,10 @@ function go() {
   $('vRate').textContent = (dRate*100>=0?'+':'') + (dRate*100).toFixed(2) + '%';
   $('vIns').textContent = '+' + Math.round(dIns*100) + '%';
   $('vRates').textContent = '+' + Math.round(dRates*100) + '%';
+  const capResVal = +$('slCapRes').value;
+  $('vCapRes').textContent = capResVal > 0
+    ? '$' + capResVal.toLocaleString() + '/yr ($' + Math.round(capResVal/52) + '/wk)'
+    : '$0/yr';
   $('vVal').textContent = (dVal*100>=0?'+':'') + Math.round(dVal*100) + '%';
   $('vInf').textContent = Math.round(inf*100) + '%';
   $('vPass').textContent = Math.round(pt*100) + '%';
@@ -1791,6 +1810,7 @@ function preset(n) {
   $('slRate').value = p.r;
   $('slIns').value = p.i;
   $('slRates').value = 0;
+  $('slCapRes').value = 0;
   $('slVal').value = p.v;
   $('slInf').value = p.inf;
   $('slPass').value = p.pt;
@@ -1803,7 +1823,7 @@ function preset(n) {
   go();
 }
 
-['slRate','slIns','slRates','slVal','slInf','slPass','slRent'].forEach(id =>
+['slRate','slIns','slRates','slCapRes','slVal','slInf','slPass','slRent'].forEach(id =>
   $(id).addEventListener('input', () => { actPreset = null; })
 );
 
