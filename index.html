@@ -32,7 +32,25 @@ body {
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   background: var(--cream); color: var(--text-primary); line-height: 1.6;
 }
-.container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+.container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+/* Two-column layout: controls sidebar + main content */
+.app-layout { display: flex; gap: 1.5rem; align-items: flex-start; }
+.sidebar {
+  width: 320px; min-width: 320px; position: sticky; top: 1rem;
+  max-height: calc(100vh - 2rem); overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: var(--sand-dark) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 5px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--sand-dark); border-radius: 3px; }
+.main-content { flex: 1; min-width: 0; }
+@media (max-width: 950px) {
+  .app-layout { flex-direction: column; }
+  .sidebar { width: 100%; min-width: 0; position: static; max-height: none; overflow-y: visible; }
+  .sidebar .ctrl-row { flex-direction: row; }
+}
+/* In sidebar, the rent range hint row stacks better */
+.sidebar .rent-slider-row { border-top: 1px solid var(--sand); padding-top: 10px; }
 
 /* Header */
 header { text-align: center; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--sand-dark); }
@@ -67,10 +85,11 @@ header .summary-bar strong { color: var(--terracotta-dark); }
 /* Controls */
 .controls {
   background: white; border: 1px solid var(--sand-dark); border-radius: 12px;
-  padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem; margin-bottom: 1.5rem;
 }
-.ctrl-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+.ctrl-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
 .ctrl-row:last-child { margin-bottom: 0; }
+.sidebar .ctrl-row { flex-direction: column; gap: 8px; }
 .ctrl-group { flex: 1; min-width: 130px; }
 .ctrl-group label {
   display: block; font-size: 0.72rem; font-weight: 600; color: var(--text-secondary);
@@ -124,6 +143,7 @@ header .summary-bar strong { color: var(--terracotta-dark); }
 .ctrl-info .info-grid dd { margin: 0 0 4px; }
 .ctrl-info .info-note { font-size: 0.68rem; color: var(--text-light); padding: 4px 12px 0; font-style: italic; }
 .presets { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--sand); }
+.presets span { width: 100%; font-size: 0.72rem; color: var(--text-light); }
 .presets span { font-size: 0.72rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px; align-self: center; }
 .preset-btn {
   padding: 3px 10px; border: 1px solid var(--sand-dark); border-radius: 16px;
@@ -468,6 +488,10 @@ footer a { color: var(--terracotta); text-decoration: none; }
   <button class="story-toggle" onclick="let b=document.getElementById('storyBody');b.style.display=b.style.display==='none'?'block':'none';this.textContent=b.style.display==='none'?'Show introduction':'Hide introduction'">Hide introduction</button>
 </div>
 
+<!-- Two-column layout -->
+<div class="app-layout">
+<div class="sidebar">
+
 <!-- Controls -->
 <div class="controls">
   <div class="ctrl-row">
@@ -565,6 +589,9 @@ footer a { color: var(--terracotta); text-decoration: none; }
   </div>
 </div>
 
+</div><!-- /.sidebar -->
+<div class="main-content">
+
 <!-- Bearer legend -->
 <div class="bearer-legend">
   <div class="bl-item"><div class="bl-sw" style="background:var(--terracotta-light)"></div>Landlord bears (built into rent)</div>
@@ -641,6 +668,9 @@ footer a { color: var(--terracotta); text-decoration: none; }
   <div id="policyCards"></div>
   <p class="policy-impl-note">These are simplified projections. Real-world outcomes depend on enforcement, market conditions, housing supply, and behavioural responses that models cannot fully predict. Every policy involves trade-offs -there are no cost-free solutions.</p>
 </div>
+
+</div><!-- /.main-content -->
+</div><!-- /.app-layout -->
 
 <!-- Caveats -->
 <div class="caveats">
