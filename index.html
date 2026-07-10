@@ -5,33 +5,89 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Cost of a Roof Over Your Head -AU/NZ Rental Cost Model</title>
 <style>
+/* Theme system shared with the Rental Portfolio dashboard: neon-dark default (body.neon)
+   with a Light toggle. The model's semantic variables carry concrete per-theme values
+   (NOT var()-of-var() indirection, which locks to :root and won't flip). Light palette here
+   mirrors the portfolio's off-white/ink light theme; neon block below mirrors its dark theme. */
 :root {
-  --charcoal: #2d2926;
-  --charcoal-light: #3d3936;
-  --terracotta: #c1666b;
-  --terracotta-light: #d4888c;
-  --terracotta-dark: #a8545a;
-  --sand: #e8dcc8;
-  --sand-light: #f2ebe0;
-  --sand-dark: #d4c5a9;
-  --cream: #faf7f2;
-  --sage: #7a9e7e;
-  --sage-dark: #5d8261;
-  --sage-light: #a3c4a7;
-  --amber: #d4a054;
-  --amber-dark: #b8863c;
-  --amber-light: #e8c88a;
-  --red-alert: #c1444b;
-  --text-primary: #2d2926;
-  --text-secondary: #5a524d;
-  --text-light: #8a827d;
-  --blue-steel: #5b7b95;
+  --charcoal: #0b0b0b;
+  --charcoal-light: #52514e;
+  --terracotta: #2a78d6;        /* primary accent (portfolio --pos, light) */
+  --terracotta-light: #2a78d6;
+  --terracotta-dark: #1f5fab;
+  --sand: #e1e0d9;              /* subtle line/fill */
+  --sand-light: #f0efec;       /* subtle panel fill */
+  --sand-dark: rgba(11,11,11,0.12); /* card / control border */
+  --cream: #f9f9f7;            /* page background */
+  --sage: #0ca30c;             /* good / positive */
+  --sage-dark: #006300;        /* good text */
+  --sage-light: #0ca30c;
+  --amber: #eaa10a;            /* tenant / warning */
+  --amber-dark: #b8860b;
+  --amber-light: #fab219;
+  --red-alert: #e34948;        /* negative */
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-light: #898781;
+  --blue-steel: #2a78d6;       /* info accent */
+  --surface-1: #fcfcfb;        /* card background */
+  --on-accent: #ffffff;        /* text on a saturated accent fill */
+  --tint-good: #f0fdf4;
+  --tint-neg: #fdf0f0;
+  --chip-bg: rgba(11,11,11,0.05);
+  --pos: #2a78d6;
+}
+/* neon dark theme - DEFAULT (body.neon). Toggle removes the class -> light palette above. */
+body.neon {
+  --charcoal: #e6ebf5;
+  --charcoal-light: #aeb6ca;
+  --terracotta: #38bdf8;       /* accent (portfolio --pos, neon) */
+  --terracotta-light: #38bdf8;
+  --terracotta-dark: #7dd3fc;
+  --sand: #1e2637;
+  --sand-light: #1c2333;
+  --sand-dark: rgba(255,255,255,0.12);
+  --cream: #0a0d15;
+  --sage: #2dff8f;
+  --sage-dark: #2dff8f;
+  --sage-light: #2dff8f;
+  --amber: #ffb02e;
+  --amber-dark: #ffb02e;
+  --amber-light: #ffcf6b;
+  --red-alert: #ff3b5c;
+  --text-primary: #e6ebf5;
+  --text-secondary: #aeb6ca;
+  --text-light: #7f88a0;
+  --blue-steel: #38bdf8;
+  --surface-1: #10141f;
+  --on-accent: #0a0d15;
+  --tint-good: rgba(45,255,143,0.10);
+  --tint-neg: rgba(255,59,92,0.10);
+  --chip-bg: rgba(255,255,255,0.06);
+  --pos: #38bdf8;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   background: var(--cream); color: var(--text-primary); line-height: 1.6;
 }
+body.neon { background: radial-gradient(1100px 760px at 78% -12%, #16203a 0%, #0a0d15 60%) fixed; }
+/* neon glow: soft cyan lift on the main cards, matching the portfolio dashboard */
+body.neon .story-section, body.neon .controls, body.neon .approach-panel,
+body.neon .snowball-section, body.neon .rent-income-section, body.neon .policy-callout,
+body.neon .scenario-section, body.neon .policy-implications, body.neon .rent-income-section,
+body.neon .landlord-position, body.neon .shift-callout {
+  box-shadow: 0 0 22px rgba(56,189,248,.05);
+}
+body.neon .snowball-section { box-shadow: 0 0 24px rgba(56,189,248,.10); }
+/* theme toggle button (shared style with the portfolio dashboard) */
+.theme-toggle {
+  font: inherit; font-size: 12px; color: var(--text-secondary); background: var(--chip-bg);
+  border: 1px solid var(--sand-dark); border-radius: 7px; padding: 4px 12px; cursor: pointer;
+}
+.theme-toggle:hover { border-color: var(--text-light); color: var(--text-primary); }
+body.neon .theme-toggle:hover { border-color: var(--pos); color: var(--pos); }
+.theme-bar { display: flex; justify-content: flex-end; padding-top: 0.25rem; margin-bottom: -0.5rem; }
 .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem; }
 
 /* Two-column layout: controls sidebar + main content */
@@ -72,7 +128,7 @@ header .summary-bar strong { color: var(--terracotta-dark); }
 
 /* Story */
 .story-section {
-  background: white; border-radius: 12px; border: 1px solid var(--sand-dark);
+  background: var(--surface-1); border-radius: 12px; border: 1px solid var(--sand-dark);
   padding: 1.5rem 2rem; margin-bottom: 2rem;
 }
 .story-section h2 { font-size: 1.1rem; color: var(--charcoal); margin-bottom: 0.75rem; }
@@ -84,7 +140,7 @@ header .summary-bar strong { color: var(--terracotta-dark); }
 
 /* Controls */
 .controls {
-  background: white; border: 1px solid var(--sand-dark); border-radius: 12px;
+  background: var(--surface-1); border: 1px solid var(--sand-dark); border-radius: 12px;
   padding: 1rem 1.25rem; margin-bottom: 1.5rem;
 }
 .ctrl-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
@@ -112,12 +168,12 @@ header .summary-bar strong { color: var(--terracotta-dark); }
 }
 .sl-row input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
-  background: var(--terracotta); cursor: pointer; border: 2px solid white;
+  background: var(--terracotta); cursor: pointer; border: 2px solid var(--surface-1);
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 .sl-row input[type="range"]::-moz-range-thumb {
   width: 16px; height: 16px; border-radius: 50%;
-  background: var(--terracotta); cursor: pointer; border: 2px solid white;
+  background: var(--terracotta); cursor: pointer; border: 2px solid var(--surface-1);
 }
 .sl-val { font-weight: 700; font-size: 0.85rem; color: var(--terracotta-dark); min-width: 48px; text-align: right; }
 
@@ -151,7 +207,7 @@ header .summary-bar strong { color: var(--terracotta-dark); }
   cursor: pointer; transition: all 0.15s;
 }
 .preset-btn:hover { background: var(--sand); border-color: var(--terracotta-light); color: var(--terracotta-dark); }
-.preset-btn.active { background: var(--terracotta); color: white; border-color: var(--terracotta); }
+.preset-btn.active { background: var(--terracotta); color: var(--on-accent); border-color: var(--terracotta); }
 
 /* Legend */
 .bearer-legend {
@@ -165,7 +221,7 @@ header .summary-bar strong { color: var(--terracotta-dark); }
 @media (max-width: 850px) { .comparison { grid-template-columns: 1fr; } }
 
 .approach-panel {
-  background: white; border-radius: 12px; border: 2px solid var(--sand-dark); overflow: hidden;
+  background: var(--surface-1); border-radius: 12px; border: 2px solid var(--sand-dark); overflow: hidden;
 }
 .approach-panel.after-panel { border-color: var(--terracotta-light); }
 
@@ -173,7 +229,7 @@ header .summary-bar strong { color: var(--terracotta-dark); }
   padding: 0.75rem 1.25rem; font-weight: 700; font-size: 0.92rem;
 }
 .panel-header.before { background: var(--sand); color: var(--charcoal); }
-.panel-header.after { background: var(--terracotta); color: white; }
+.panel-header.after { background: var(--terracotta); color: var(--on-accent); }
 .panel-header small { font-weight: 400; font-size: 0.78rem; display: block; margin-top: 0.1rem; opacity: 0.85; }
 
 /* Cost groups */
@@ -228,7 +284,7 @@ header .summary-bar strong { color: var(--terracotta-dark); }
 }
 .cr-badge {
   font-size: 0.6rem; font-weight: 700; padding: 1px 5px; border-radius: 3px;
-  color: white; text-transform: uppercase; letter-spacing: 0.3px;
+  color: var(--on-accent); text-transform: uppercase; letter-spacing: 0.3px;
 }
 .cr-badge.b-ll { background: var(--terracotta); }
 .cr-badge.b-t { background: var(--amber-dark); }
@@ -245,8 +301,8 @@ header .summary-bar strong { color: var(--terracotta-dark); }
 }
 .cr-tog-btn:first-child { border-radius: 3px 0 0 3px; }
 .cr-tog-btn:last-child { border-radius: 0 3px 3px 0; }
-.cr-tog-btn.active-ll { background: var(--terracotta); color: white; border-color: var(--terracotta); }
-.cr-tog-btn.active-t { background: var(--amber-dark); color: white; border-color: var(--amber-dark); }
+.cr-tog-btn.active-ll { background: var(--terracotta); color: var(--on-accent); border-color: var(--terracotta); }
+.cr-tog-btn.active-t { background: var(--amber-dark); color: var(--on-accent); border-color: var(--amber-dark); }
 
 /* Panel totals */
 .panel-totals { padding: 12px 14px; background: var(--sand-light); border-top: 2px solid var(--sand-dark); }
@@ -262,7 +318,7 @@ header .summary-bar strong { color: var(--terracotta-dark); }
 
 /* Snowball section */
 .snowball-section {
-  background: white; border: 2px solid var(--terracotta); border-radius: 12px;
+  background: var(--surface-1); border: 2px solid var(--terracotta); border-radius: 12px;
   padding: 1.5rem 2rem; margin-bottom: 2rem; text-align: center;
 }
 .snowball-section h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); margin-bottom: 14px; }
@@ -285,7 +341,7 @@ header .summary-bar strong { color: var(--terracotta-dark); }
 
 /* Cost shift callout */
 .shift-callout {
-  background: #edf4f0; border: 1px solid var(--sage-light); border-left: 4px solid var(--sage);
+  background: var(--tint-good); border: 1px solid var(--sage-light); border-left: 4px solid var(--sage);
   border-radius: 0 8px 8px 0; padding: 14px 18px; margin-bottom: 1.5rem; display: none;
 }
 .shift-callout h4 { font-size: 0.88rem; color: var(--sage-dark); margin-bottom: 6px; }
@@ -328,8 +384,8 @@ footer a { color: var(--terracotta); text-decoration: none; }
   padding: 1.2rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;
   font-weight: 600; border: 2px solid; flex-wrap: wrap; text-align: center;
 }
-.ll-pos-neg { background: #fdf0f0; border-color: var(--terracotta); color: var(--terracotta-dark); }
-.ll-pos-pos { background: #f0fdf4; border-color: var(--sage); color: var(--sage-dark); }
+.ll-pos-neg { background: var(--tint-neg); border-color: var(--terracotta); color: var(--terracotta-dark); }
+.ll-pos-pos { background: var(--tint-good); border-color: var(--sage); color: var(--sage-dark); }
 .ll-pos-social { background: var(--sand-light); border-color: var(--blue-steel); color: var(--blue-steel); }
 .ll-cashflow { font-size: 1.5rem; line-height: 1.2; }
 .ll-detail { font-size: 0.85rem; font-weight: 500; }
@@ -343,7 +399,7 @@ footer a { color: var(--terracotta); text-decoration: none; }
 
 /* Rent-to-income bar */
 .rent-income-section {
-  background: white; border: 1px solid var(--sand-dark); border-radius: 12px;
+  background: var(--surface-1); border: 1px solid var(--sand-dark); border-radius: 12px;
   padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
 }
 .rib-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; }
@@ -370,7 +426,7 @@ footer a { color: var(--terracotta); text-decoration: none; }
 
 /* Policy callout */
 .policy-callout {
-  background: white; border: 1px solid var(--sand-dark); border-left: 4px solid var(--blue-steel);
+  background: var(--surface-1); border: 1px solid var(--sand-dark); border-left: 4px solid var(--blue-steel);
   border-radius: 0 12px 12px 0; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
 }
 .policy-callout h4 { font-size: 0.92rem; color: var(--blue-steel); margin-bottom: 0.5rem; }
@@ -380,7 +436,7 @@ footer a { color: var(--terracotta); text-decoration: none; }
 
 /* Scenario plotter */
 .scenario-section {
-  background: white; border: 1px solid var(--sand-dark); border-radius: 12px;
+  background: var(--surface-1); border: 1px solid var(--sand-dark); border-radius: 12px;
   padding: 1.5rem; margin-bottom: 2rem;
 }
 .scenario-section h3 { font-size: 1rem; color: var(--charcoal); margin-bottom: 0.75rem; }
@@ -420,15 +476,15 @@ footer a { color: var(--terracotta); text-decoration: none; }
 .sc-policy-toggles { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 0.75rem; }
 .sc-pol-btn {
   font-size: 0.72rem; padding: 4px 10px; border-radius: 14px; cursor: pointer;
-  border: 1.5px solid var(--sand-dark); background: white; color: var(--text-secondary);
+  border: 1.5px solid var(--sand-dark); background: var(--surface-1); color: var(--text-secondary);
   transition: all 0.15s;
 }
-.sc-pol-btn.active { border-color: var(--charcoal); background: var(--charcoal); color: white; }
+.sc-pol-btn.active { border-color: var(--charcoal); background: var(--charcoal); color: var(--on-accent); }
 .sc-pol-btn:hover { border-color: var(--charcoal); }
 
 /* Policy implications */
 .policy-implications {
-  background: white; border: 1px solid var(--sand-dark); border-radius: 12px;
+  background: var(--surface-1); border: 1px solid var(--sand-dark); border-radius: 12px;
   padding: 1.5rem; margin-bottom: 2rem;
 }
 .policy-implications h3 { font-size: 1rem; color: var(--charcoal); margin-bottom: 1rem; }
@@ -463,8 +519,12 @@ footer a { color: var(--terracotta); text-decoration: none; }
 }
 </style>
 </head>
-<body>
+<body class="neon">
 <div class="container">
+
+<div class="theme-bar">
+  <button type="button" id="themeToggle" class="theme-toggle">Light theme</button>
+</div>
 
 <header>
   <h1>The Cost of a Roof Over Your Head</h1>
@@ -573,6 +633,12 @@ footer a { color: var(--terracotta); text-decoration: none; }
         <strong>80%</strong> landlord absorbs &nbsp;|&nbsp; <strong>100%</strong> full pass-through &nbsp;|&nbsp; <strong>150%</strong> adds margin
       </div>
     </div>
+  </div>
+  <div class="ctrl-row">
+    <label class="flat-tog" style="width:100%;justify-content:flex-start;text-align:left;line-height:1.35;" title="Treasury Laws Amendment (Tax Reform No. 1) Act 2026 (Act No. 49)">
+      <input type="checkbox" id="chkNewNg" onchange="go()">
+      <span>AU: established property bought after 12 May 2026 <span style="color:var(--text-light);font-weight:400;">- negative gearing removed from 2027-28 (grandfathered otherwise)</span></span>
+    </label>
   </div>
   <div class="presets">
     <span>Presets:</span>
@@ -688,14 +754,14 @@ footer a { color: var(--terracotta); text-decoration: none; }
   <p><strong>This tool shows how costs are allocated</strong> -not what rent should be. Actual rent is also driven by supply and demand in your local market.</p>
   <p><strong>Supply, demand, and migration:</strong> Low vacancy rates, population growth, and immigration volumes all create upward pressure on rents independently of costs. This tool focuses on the cost-push side -the floor landlords need to cover.</p>
   <p>All figures are approximate and based on a typical 3-bedroom property at regional median prices. Tax benefits are simplified. NZ figures are in NZD.</p>
-  <p>Data verified March 2026. Interest rates, insurance premiums, and land tax thresholds change regularly.</p>
+  <p>Data verified July 2026. Interest rates, insurance premiums, tax policy, and land tax thresholds change regularly.</p>
   <p>This tool is educational, not financial advice.</p>
 </div>
 
 </div>
 
 <footer>
-  <p>The Cost of a Roof Over Your Head -AU/NZ -Data verified March 2026</p>
+  <p>The Cost of a Roof Over Your Head -AU/NZ -Data verified July 2026</p>
   <p style="margin-top:3px">Companion to the <a href="supply-chain-inflation.html">Supply Chain Inflation Visualizer</a></p>
 </footer>
 
@@ -728,10 +794,10 @@ const R = {
   qld: {
     nm:"Queensland", cur:"AUD", wPaid:"tenant",
     ltThr:600000, ltRate:0.01, ltBase:500,
-    iRisk:1.6, mgmt:0.075, medInc:1675,
+    iRisk:1.35, mgmt:0.075, medInc:1675,
     rent:{house:640,unit:540}, val:{house:700000,unit:500000},
     strata:5500, rates:2200, ratesAvg:0.05, water:1000, comply:500, stampPct:0.035,
-    iNote:"North QLD cyclone premiums ~60% above national avg",
+    iNote:"North QLD cyclone premiums ~34% above national avg (ACCC final report, Jun 2026); reinsurance pool cut year-1 premiums 11-15% in target zones.",
     reforms:["Rent bidding banned","Rent increases limited to once per year","Minimum housing standards introduced"],
   },
   sa: {
@@ -757,11 +823,23 @@ const R = {
     rent:{house:625,unit:575}, val:{house:780000,unit:550000},
     strata:4500, rates:4100, ratesAvg:0.084, water:800, comply:800, stampPct:0,
     ringFenced:true,
-    wNote:"Landlord pays fixed. Wellington: Tiaki Wai separate bills from Jul 2026 (~$2,418/yr).",
+    wNote:"Landlord pays fixed. Wellington: Tiaki Wai separate water bills since Jul 2026 (live) (~$2,418/yr).",
     waterTransition:true, waterNewAnn:2418,
     reforms:["Letting fee ban (tenant-paid → landlord cost, 2019)","Healthy Homes standards mandatory","Bright-line test reduced to 2 years","Interest deductibility restored (April 2025)","Rent increases limited to once per year"],
   },
 };
+
+// Region key + per-region base mortgage rate. AU = RBA cash rate 4.35% (held 17 Jun 2026,
+// next decision 11 Aug 2026) + typical investor margin -> ~7.05%. NZ = RBNZ OCR 2.50%
+// (hiked 8 Jul 2026) + NZ investor margin -> ~5.9%. Verified Jul 2026 (see SOURCES.md).
+Object.keys(R).forEach(k => { R[k].key = k; R[k].baseRate = 0.0705; });
+R.nz.baseRate = 0.059;
+
+// Federal AU tax reform (Act No. 49, 2026) applies to every AU state; NZ pet bonds (Dec 2025).
+['nsw','vic','qld','sa','wa'].forEach(k => {
+  R[k].reforms = R[k].reforms.concat(['Negative gearing limited to new builds + 50% CGT discount replaced (federal - established property from 1 Jul 2027, grandfathered; Act No. 49, 2026)']);
+});
+R.nz.reforms = R.nz.reforms.concat(['Pet bonds allowed (up to 2 weeks additional bond, Dec 2025)']);
 
 const O = {
   individual: { lb:"Individual (mum & dad)", mgmtM:1.0, rAdj:0, ltM:1.0, vac:0.03, yAdj:0, margTax:0.37 },
@@ -769,8 +847,35 @@ const O = {
   social:     { lb:"Government / social", mgmtM:0, rAdj:-0.068, ltM:0, vac:0, yAdj:-0.05, margTax:0 },
 };
 
-const BASE_RATE = 0.068, BASE_INS = 0.004, LVR = 0.60, HOLD_YRS = 10, CAP_GROWTH = 0.04;
+const BASE_INS = 0.004, LVR = 0.60, HOLD_YRS = 10, CAP_GROWTH = 0.04;
 // LVR 60%: typical established investor (some equity built up). New buyers would be higher.
+// Base mortgage rate is now per-region (R[reg].baseRate) - AU and NZ policy rates diverged.
+
+// Land tax scales (banded), ported verbatim from the verified LAND_TAX register in the
+// Rental Portfolio dashboard (each read at the state revenue office 2026-07-08). Entry is
+// inclusive (>= from), so QLD is taxable AT its $600k threshold; NSW only above $1.075m.
+// SA is a March-2026 single-threshold approximation - NOT re-verified in the Jul 2026 pass.
+const LAND_TAX = {
+  nsw: [ {from:1075001, over:1075000, base:100, rate:0.016}, {from:6571001, over:6571000, base:88036, rate:0.02} ],
+  vic: [ {from:50000, over:0, base:500, rate:0}, {from:100000, over:0, base:975, rate:0},
+         {from:300000, over:300000, base:1350, rate:0.003}, {from:600000, over:600000, base:2250, rate:0.006},
+         {from:1000000, over:1000000, base:4650, rate:0.009}, {from:1800000, over:1800000, base:11850, rate:0.0165},
+         {from:3000000, over:3000000, base:31650, rate:0.0265} ],
+  qld: [ {from:600000, over:600000, base:500, rate:0.01}, {from:1000000, over:1000000, base:4500, rate:0.0165},
+         {from:3000000, over:3000000, base:37500, rate:0.0125}, {from:5000000, over:5000000, base:62500, rate:0.0175},
+         {from:10000000, over:10000000, base:150000, rate:0.0225} ],
+  wa:  [ {from:300001, over:0, base:300, rate:0}, {from:420001, over:420000, base:300, rate:0.0025},
+         {from:1000001, over:1000000, base:1750, rate:0.009}, {from:1800001, over:1800000, base:8950, rate:0.018},
+         {from:5000001, over:5000000, base:66550, rate:0.02}, {from:11000001, over:11000000, base:186550, rate:0.0267} ],
+  sa:  [ {from:833000, over:833000, base:0, rate:0.005} ],
+};
+function landTaxAmt(regKey, lv) {
+  const br = LAND_TAX[regKey];
+  if (!br) return 0; // NZ: no land tax
+  let b = null;
+  for (const x of br) { if (lv >= x.from) b = x; }
+  return b ? b.base + (lv - b.over) * b.rate : 0;
+}
 
 // Bearer state: who pays each cost. LL = landlord (rent), T = tenant (direct), G = govt
 // Some are fixed, some are toggleable
@@ -834,7 +939,7 @@ function calcAll(reg, typ, own, dRate, dIns, dVal, inf, pt, rentPct, dRates) {
   const baseVal = r.val[typ];
   const propVal = baseVal * (1 + dVal);
   const mortBal = baseVal * LVR;
-  const effRate = Math.max(0.005, BASE_RATE + dRate + o.rAdj);
+  const effRate = Math.max(0.005, r.baseRate + dRate + o.rAdj);
   const isUnit = typ === 'unit';
   const infM = 1 + inf;
 
@@ -845,17 +950,14 @@ function calcAll(reg, typ, own, dRate, dIns, dVal, inf, pt, rentPct, dRates) {
   // Raw costs (annual) -actual costs, NOT affected by pass-through
   // Pass-through only affects how much of the cost increase flows into rent
   const raw = {};
-  raw.mortgage     = own==='social' ? { base: 0, after: 0 } : { base: mortBal * BASE_RATE, after: mortBal * effRate };
+  raw.mortgage     = own==='social' ? { base: 0, after: 0 } : { base: mortBal * r.baseRate, after: mortBal * effRate };
   raw.stampDuty    = { base: own==='social' ? 0 : (baseVal*(r.stampPct||0))/HOLD_YRS, after: own==='social' ? 0 : (baseVal*(r.stampPct||0))/HOLD_YRS };
   raw.bldIns       = { base: baseVal * BASE_INS * r.iRisk,          after: propVal * BASE_INS * r.iRisk * (1 + dIns) };
   raw.llIns        = { base: own==='social' ? 0 : 420,              after: own==='social' ? 0 : 420 };
   raw.rates        = { base: r.rates,                                after: r.rates * (1 + (dRates || 0)) };
 
-  let ltBase = 0, ltAfter = 0;
   const lvBase = baseVal * 0.6 * o.ltM, lvAfter = propVal * 0.6 * o.ltM;
-  if (lvBase > r.ltThr) ltBase = r.ltBase + (lvBase - r.ltThr) * r.ltRate;
-  if (lvAfter > r.ltThr) ltAfter = r.ltBase + (lvAfter - r.ltThr) * r.ltRate;
-  raw.landTax = { base: ltBase, after: ltAfter };
+  raw.landTax = { base: landTaxAmt(r.key, lvBase), after: landTaxAmt(r.key, lvAfter) };
 
   raw.water   = { base: r.water,                          after: r.water * infM };
   raw.maint   = { base: own==='social' ? 4500 : 3500,     after: (own==='social' ? 4500 : 3500) * infM };
@@ -905,8 +1007,11 @@ function calcAll(reg, typ, own, dRate, dIns, dVal, inf, pt, rentPct, dRates) {
   const depBase = own==='social' ? 0 : baseVal * 0.025;
   const depAft = own==='social' ? 0 : propVal * 0.025;
 
+  // AU negative gearing abolition (Act No. 49, 2026): established property bought after
+  // 12 May 2026 loses the salary-offset from the 2027-28 income year. Grandfathered otherwise.
+  const ngRemoved = !!(typeof document !== 'undefined' && document.getElementById('chkNewNg') && document.getElementById('chkNewNg').checked);
   function calcTaxBenefit(rentAnn, which) {
-    if (r.ringFenced || own === 'social') return 0;
+    if (r.ringFenced || own === 'social' || ngRemoved) return 0;
     const totalExpenses = sumLL(which) + raw.mgmtFee[which] + raw.vacancy[which] + depBase;
     const loss = totalExpenses - rentAnn;
     if (loss <= 0) return 0; // positively geared, no tax benefit
@@ -937,7 +1042,7 @@ function calcFlat(reg, typ, own, dRate, dIns, dVal, inf, pt, rentPct, dRates) {
   const r = R[reg], o = O[own];
   const baseVal = r.val[typ], propVal = baseVal * (1 + dVal);
   const mortBal = baseVal * LVR;
-  const effRate = Math.max(0.005, BASE_RATE + dRate + o.rAdj);
+  const effRate = Math.max(0.005, r.baseRate + dRate + o.rAdj);
   const isUnit = typ === 'unit';
   const infM = 1 + inf;
   const marketRentAnn = r.rent[typ] * (rentPct || 1) * 52;
@@ -948,7 +1053,7 @@ function calcFlat(reg, typ, own, dRate, dIns, dVal, inf, pt, rentPct, dRates) {
   for (const d of COST_DEFS) {
     if (d.k === 'mgmtFee' || d.k === 'vacancy' || d.k === 'taxBenefit') continue;
     if (bearers[d.k] !== 'LL') continue;
-    const b = calcSingleCost(d.k, r, o, baseVal, baseVal, mortBal, BASE_RATE, isUnit, 1, 1, own, 0);
+    const b = calcSingleCost(d.k, r, o, baseVal, baseVal, mortBal, r.baseRate, isUnit, 1, 1, own, 0);
     const a = calcSingleCost(d.k, r, o, baseVal, propVal, mortBal, effRate, isUnit, infM, pt, own, dRates);
     baseLLCosts += b;
     afterLLCosts += a;
@@ -969,7 +1074,7 @@ function calcSingleCost(k, r, o, baseVal, propVal, mortBal, effRate, isUnit, inf
     case 'bldIns': return propVal * BASE_INS * r.iRisk * (1+(+$('slIns').value/100));
     case 'llIns': return own==='social' ? 0 : 420;
     case 'rates': return r.rates * (1 + (dRates || 0));
-    case 'landTax': { const lv = propVal * 0.6 * o.ltM; return lv > r.ltThr ? r.ltBase + (lv - r.ltThr) * r.ltRate : 0; }
+    case 'landTax': { const lv = propVal * 0.6 * o.ltM; return landTaxAmt(r.key, lv); }
     case 'water': return r.water * infM;
     case 'maint': return (own==='social'?4500:3500)*infM;
     case 'strata': return isUnit ? r.strata * infM : 0;
@@ -1013,7 +1118,7 @@ function go() {
   const rAvg = R[reg].ratesAvg;
   $('ratesHint').textContent = '(avg ' + (rAvg*100).toFixed(1) + '%/yr)';
   const rCtx = reg === 'nz'
-    ? 'NZ avg 8.4%/yr -water infrastructure costs uncapped under proposed govt rates cap. Wellington: separate water bills from Jul 2026.'
+    ? 'NZ avg 8.4%/yr -water infrastructure costs uncapped under proposed govt rates cap. Wellington: separate water bills live since Jul 2026.'
     : 'AU avg ~4%/yr -varies by council area';
   $('ratesContext').textContent = dRates > 0 ? rCtx : '';
 
@@ -1114,9 +1219,11 @@ function renderPanel(containerId, d, which, maxAnn) {
       }
       if (def.k === 'taxBenefit') {
         const r = R[$('selRegion').value];
+        const ngGone = $('chkNewNg') && $('chkNewNg').checked;
         sub = r.ringFenced
           ? 'NZ: ring-fenced (carries forward only)'
-          : 'AU: negative gearing (offsets salary tax)';
+          : (ngGone ? 'AU: negative gearing removed (est. property, from 2027-28)'
+                    : 'AU: negative gearing (offsets salary tax)');
       }
 
       // Toggle or badge
@@ -1278,7 +1385,12 @@ function renderControlInfo(reg, typ, own) {
   const waterNote = r.wNote ? `<div class="info-note">${r.wNote}</div>` : '';
   const insNote = r.iNote ? `<div class="info-note">${r.iNote}</div>` : '';
   const ltNote = r.ltNote ? `<div class="info-note">${r.ltNote}</div>` : '';
-  const ringNote = r.ringFenced ? '<dd>Ring-fenced (no negative gearing)</dd>' : '<dd>Negative gearing available</dd>';
+  const ngGone = $('chkNewNg') && $('chkNewNg').checked;
+  const ringNote = r.ringFenced
+    ? '<dd>Ring-fenced (no negative gearing)</dd>'
+    : (ngGone
+        ? '<dd>Negative gearing removed (established property bought after 12 May 2026; effect from 2027-28)</dd>'
+        : '<dd>Negative gearing available (grandfathered: pre-12 May 2026 contract, or new-build / build-to-rent)</dd>');
 
   // Owner info
   const ownerDescs = {
@@ -1322,7 +1434,7 @@ function renderControlInfo(reg, typ, own) {
   html += `<div><dt>Insurance risk factor</dt><dd>${r.iRisk}x national baseline</dd></div>`;
   html += `<div><dt>Water</dt><dd>${r.wPaid === 'tenant' ? 'Tenant pays usage' : r.wPaid === 'landlord' ? 'Landlord pays (built into rent)' : 'Varies by lease'} -${fmt(r.water)}/yr</dd></div>`;
   html += `<div><dt>Stamp duty</dt><dd>${r.stampPct ? (r.stampPct*100).toFixed(1) + '% (amortised over ' + HOLD_YRS + ' yrs)' : 'None'}</dd></div>`;
-  html += `<div><dt>Land tax threshold</dt><dd>${r.ltThr === Infinity ? 'No land tax' : fmt(r.ltThr) + ' @ ' + (r.ltRate*100).toFixed(1) + '%'}</dd></div>`;
+  html += `<div><dt>Land tax threshold</dt><dd>${r.ltThr === Infinity ? 'No land tax' : fmt(r.ltThr) + '+ (banded scale)'}</dd></div>`;
   html += `<div><dt>Rental losses</dt>${ringNote}</div>`;
   html += '</dl>';
   if (insNote) html += insNote;
@@ -1368,7 +1480,7 @@ function renderShiftCallout(reg) {
     $('shiftTitle').textContent = 'Cost Shift: NZ Water Infrastructure';
     const wk = Math.round(r.waterNewAnn / 52);
     $('shiftContent').innerHTML = `
-      <p><strong>Wellington region:</strong> From July 2026, <strong>Tiaki Wai</strong> replaces Wellington Water. Property owners receive <span class="sc-hl">separate quarterly water bills</span> -no longer bundled in rates.</p>
+      <p><strong>Wellington region:</strong> Since July 2026, <strong>Tiaki Wai</strong> has replaced Wellington Water. Property owners now receive <span class="sc-hl">separate quarterly water bills</span> -no longer bundled in rates.</p>
       <p>Average: <span class="sc-hl">~$${r.waterNewAnn.toLocaleString()}/yr ($${wk}/wk)</span>, projected ~$6,831/yr by 2036. Until meters are installed (2028-2030), <span class="sc-hl">landlord absorbs the full fixed charge</span>.</p>
       <p class="sc-sm">The cost was previously funded through rates (invisible). Now it's a separate charge -but rates don't decrease by the same amount. Other NZ regions following: Hawke's Bay (Jul 2027), Hamilton, Auckland (already separate via Watercare).</p>
       ${waterShifted ? `<p class="sc-sm">You've toggled water to "${bearers.water === 'T' ? 'Tenant pays' : 'Landlord pays'}" -see how the totals shift. <strong>The total cost of housing stays the same.</strong></p>` : ''}`;
@@ -1402,10 +1514,10 @@ const SCENARIOS = [
     calc: (baseRent, yr, inf) => baseRent * Math.pow(1 + inf, yr), // grows at CPI only -no mgmt % amplification
   },
   {
-    id: 'greens_nz', lb: 'NZ Greens -2% rent cap', isPolicy: true,
+    id: 'greens_nz', lb: '2% rent cap (illustrative)', isPolicy: true,
     color: 'var(--sage-dark)', dash: '6,4',
-    desc: 'Rents capped at 2% increase per year. Costs still rise at market rates.',
-    source: 'rnz.co.nz/news/political/590598',
+    desc: 'Rents capped at 2% increase per year - an illustrative hard cap. Costs still rise at market rates.',
+    source: 'Illustrative example (hard annual cap)',
     calc: (baseRent, yr) => baseRent * Math.pow(1.02, yr),
     implications: {
       tenant: 'Predictable rent increases. Max 2%/yr regardless of cost pressures.',
@@ -1838,6 +1950,19 @@ function showTip(e,n,a,d) {
 }
 function hideTip() { $('tip').style.display='none'; }
 function moveTip(e) { const t=$('tip'); t.style.left=Math.min(e.clientX+12,innerWidth-300)+'px'; t.style.top=Math.min(e.clientY-10,innerHeight-100)+'px'; }
+
+// Theme toggle (neon dark default; shares the rpm-theme key with the Portfolio dashboard)
+function applyTheme(t) {
+  document.body.classList.toggle('neon', t !== 'light');
+  const btn = $('themeToggle');
+  if (btn) btn.textContent = (t === 'light') ? 'Neon theme' : 'Light theme';
+}
+$('themeToggle').addEventListener('click', () => {
+  const t = document.body.classList.contains('neon') ? 'light' : 'neon';
+  applyTheme(t);
+  try { localStorage.setItem('rpm-theme', t); } catch(e){}
+});
+try { applyTheme(localStorage.getItem('rpm-theme') || 'neon'); } catch(e){ applyTheme('neon'); }
 
 // Init
 initBearers('qld');

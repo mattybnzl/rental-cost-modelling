@@ -22,11 +22,11 @@ Property management fees, insurance premiums, and other percentage-based charges
 
 ## Data sources
 
-All figures are sourced from public data verified March 2026 -Domain rental reports, CoreLogic, RBA rates, APRA insurance statistics, state revenue offices, and more. Full source list with 40+ citations available in the repo.
+All figures are sourced from public data verified July 2026 -Domain rental reports, CoreLogic, RBA rates, APRA insurance statistics, state revenue offices, and more. Full source list with 40+ citations available in the repo.
 
 ## Status
 
-This tool is **in active development** (currently v3.4). Regions, cost models, and visualisations are still evolving. Planned additions include a Sankey flow diagram and historical timeline mode.
+This tool is **in active development** (currently v3.6). Regions, cost models, and visualisations are still evolving. Planned additions include a Sankey flow diagram and historical timeline mode.
 
 ## Feedback welcome
 

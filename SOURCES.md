@@ -1,8 +1,8 @@
 # The Cost of a Roof — Data Sources
 
-Version: v3.4 (March 2026)
+Version: v3.6 (July 2026)
 
-All figures are approximate and representative of typical properties. Data was verified March 2026. Sources are categorised by data type.
+All figures are approximate and representative of typical properties. Data was verified July 2026 (refresh from the March 2026 baseline: RBA 4.35% + per-region NZ rate, AU negative-gearing/CGT reform Act No. 49, banded land tax, 2026 ACCC insurance report, Tiaki Wai live). Sources are categorised by data type.
 
 ---
 
@@ -49,17 +49,18 @@ Weekly median household income by region.
 
 | Parameter | Value | Source |
 |-----------|-------|--------|
-| Base mortgage rate | 6.8% | RBA cash rate + typical investor margin, Canstar/RateCity aggregated investor rates (early 2026) |
+| Base mortgage rate (AU) | 7.05% | RBA cash rate 4.35% (held 17 Jun 2026, next decision 11 Aug 2026) + typical investor margin |
+| Base mortgage rate (NZ) | 5.9% | RBNZ OCR 2.50% (hiked 8 Jul 2026) + NZ investor margin. AU and NZ policy rates diverged, so the rate is now per-region (was a single global 6.8% in v3.5) |
 | Portfolio discount | -0.2% | Industry estimate — volume discount for 3+ property portfolios |
-| Social housing rate adj | -6.8% (i.e., 0%) | Social housing is government-funded, no commercial mortgage |
+| Social housing rate adj | none (0%) | Social housing is government-funded, no commercial mortgage |
 
 ## Insurance
 
 | Parameter | Value | Source |
 |-----------|-------|--------|
 | Base building insurance rate | 0.4% of property value | APRA General Insurance Statistics, Insurance Council of Australia |
-| Insurance risk multipliers | 0.8x (SA) to 1.6x (QLD) | ACCC Northern Australia Insurance Inquiry, ICA Catastrophe Database |
-| QLD cyclone premium note | ~60% above national avg | ACCC Northern Australia Insurance Inquiry 2020 |
+| Insurance risk multipliers | 0.8x (SA) to 1.5x (NZ) / 1.35x (QLD) | ACCC Insurance Monitoring (final report 25 Jun 2026), ICA Catastrophe Database. NB: the ACCC's northern-Australia monitoring mandate ended 30 Jun 2026 - a new source is needed for future refreshes |
+| QLD cyclone premium note | ~34% above national avg | ACCC final Insurance Monitoring Report, Jun 2026 (north QLD avg >$3,100 vs ~$2,310 rest-of-AU). Reinsurance cyclone pool cut year-1 premiums 11-15% in target zones (Karratha -15%, Cairns -12%, Townsville -3%). Was ~60% per the superseded 2020 ACCC inquiry |
 | NZ earthquake risk | 1.5x | EQC/Toka Tu Ake data, Insurance Council of NZ |
 | Landlord liability insurance | $420/yr | Market rates for standard landlord insurance policies (Terri Scheer, EBM RentCover) |
 
@@ -83,7 +84,7 @@ Weekly median household income by region.
 | QLD | $1,000 | Tenant (usage) | QLD Urban Utilities, Unity Water typical bills |
 | SA | $900 | Varies | SA Water typical bills, lease-dependent allocation |
 | WA | $1,000 | Tenant (usage) | Water Corporation WA typical bills |
-| NZ | NZ$800 | Landlord | Residential Tenancies Act 1986 (NZ) — fixed water charges are landlord responsibility. Wellington: Tiaki Wai (separate water entity from Jul 2026) projected ~NZ$2,418/yr, expected to double by 2036 |
+| NZ | NZ$800 | Landlord | Residential Tenancies Act 1986 (NZ) — fixed water charges are landlord responsibility. Wellington: Tiaki Wai (separate water entity live since Jul 2026) projected ~NZ$2,418/yr, expected to double by 2036 |
 
 ## Stamp Duty / Transfer Duty
 
@@ -100,16 +101,18 @@ Note: Amortised over 10-year hold period (HOLD_YRS constant).
 
 ## Land Tax
 
-| Region | Threshold | Rate | Source |
-|--------|-----------|------|--------|
-| NSW | $1,075,000 | 1.6% + $100 | Revenue NSW — land tax thresholds (frozen from 2025) |
-| VIC | $50,000 | 0.2% | State Revenue Office VIC — COVID debt levy (2024-2033), VRLT expanded statewide Jan 2025 |
-| QLD | $600,000 | 1.0% + $500 | QLD Revenue — land tax rates |
-| SA | $833,000 | 0.5% | RevenueSA — land tax |
-| WA | $300,000 | 0.25% + $300 | WA Revenue — land tax |
-| NZ | N/A | 0% | No land tax in NZ |
+As of v3.6 the model uses **full banded scales** (the `LAND_TAX` const), ported verbatim from the Rental Portfolio dashboard's `LAND_TAX` register (each scale read at the state revenue office on 2026-07-08; no 2026-27 budget changes to any residential-investment scale). Entry is inclusive (`>= from`), so QLD is taxable AT its $600k threshold (-> $500) while NSW only above $1.075m. Previously (v3.5 and earlier) a single-threshold flat-rate formula understated VIC ~2x and overstated WA ~2x at typical land values.
 
-Portfolio investors use 2.5x land tax multiplier (aggregated holdings across properties).
+| Region | First taxing threshold | Scale | Source (verified 2026-07-08) |
+|--------|-----------|------|--------|
+| NSW | $1,075,001 | $100 + 1.6%, then 2.0% over $6.571m | Revenue NSW (thresholds frozen since 2024) |
+| VIC | $50,000 | $500/$975 flat bands, then 0.3%→2.65% marginal from $300k (COVID debt levy folded in, to 2033) | SRO Victoria |
+| QLD | $600,000 | $500 + 1.0%, then 1.65%→2.25% (taxable AT threshold) | Queensland Revenue Office |
+| WA | $300,001 | $300 flat to $420k, then 0.25%→2.67% marginal | RevenueWA |
+| SA | $833,000 | 0.5% single-threshold **approximation** — March-2026 data, NOT re-verified in the Jul 2026 pass; verify at RevenueSA before relying on SA output | RevenueSA (unverified) |
+| NZ | N/A | No land tax (Land Tax Abolition Act 1990) | — |
+
+Land value modelled as 60% of property value. Portfolio investors use a 2.5x land tax multiplier (crude proxy for aggregated holdings on the general scale).
 
 ## Property Management Fees
 
@@ -149,7 +152,7 @@ Portfolio investors receive an 18% discount on management fees (0.82 multiplier)
 |-----------|-------|--------|
 | Marginal tax rate | 37% | ATO individual tax rates 2025-26 — $120k-$180k bracket (typical investor) |
 | Depreciation | 2.5% of building value | ATO — Division 43 capital works deduction (post-1985 buildings) |
-| Negative gearing (AU) | Loss offsets other income | ATO — rental property deductions (current law) |
+| Negative gearing (AU) | Loss offsets other income — being wound back | Treasury Laws Amendment (Tax Reform No. 1) Act 2026 (Act No. 49, Royal Assent 26 Jun 2026). Negative gearing limited to new builds/BTR for contracts after 12 May 2026; established-property contracts after that date lose the salary-offset from the 2027-28 income year; pre-12-May contracts grandfathered. 50% CGT discount simultaneously replaced with cost-base indexation + 30% minimum tax. Modelled via the "established property bought after 12 May 2026" toggle (zeros the AU tax benefit when on) |
 | Ring-fencing (NZ) | Rental losses ring-fenced since 2019 | IRD — ring-fencing of residential rental deductions |
 | Interest deductibility (NZ) | Restored April 2025 | IRD — interest limitation rules, restored under National-led government |
 | Capital growth assumption | 4%/yr | CoreLogic long-run house price growth (nominal), used for capital growth context only |
