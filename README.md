@@ -4,6 +4,14 @@ Rent goes up faster than costs increase. This interactive tool shows you why -an
 
 **[Open the live tool](https://mattybnzl.github.io/rental-cost-modelling/)** -no install, runs in your browser.
 
+## Screenshots
+
+Neon-dark theme (default) with a Light toggle in the top-right:
+
+| Neon dark | Light |
+|-----------|-------|
+| ![Neon-dark theme](screenshots/dark.png) | ![Light theme](screenshots/light.png) |
+
 ## What you can do
 
 - **Choose your region** -NSW, VIC, QLD, SA, WA, or NZ, each with real median rents, property values, and region-specific rules
@@ -13,7 +21,7 @@ Rent goes up faster than costs increase. This interactive tool shows you why -an
 - **Toggle "What if fees were flat?"** -instantly see the rent difference if management fees were a fixed dollar amount
 - **Shift cost bearers** -click any cost line to move it between landlord, tenant, and government to explore policy alternatives
 - **Load scenario presets** -2019 baseline, COVID era, 2023 peak, current 2026, QLD cyclone, NZ earthquake
-- **View the 5-year plotter** -compare market trajectory against policy proposals (NZ Greens 2% cap, CPI-linked cap, rent freeze)
+- **View the 5-year plotter** -compare market trajectory against policy options (illustrative 2% rent cap, CPI-linked cap, rent freeze)
 - **Check rent-to-income** -visual gauge showing housing stress thresholds against regional median household income
 
 ## The core idea

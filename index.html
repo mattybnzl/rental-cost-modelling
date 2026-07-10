@@ -851,10 +851,10 @@ const BASE_INS = 0.004, LVR = 0.60, HOLD_YRS = 10, CAP_GROWTH = 0.04;
 // LVR 60%: typical established investor (some equity built up). New buyers would be higher.
 // Base mortgage rate is now per-region (R[reg].baseRate) - AU and NZ policy rates diverged.
 
-// Land tax scales (banded), ported verbatim from the verified LAND_TAX register in the
-// Rental Portfolio dashboard (each read at the state revenue office 2026-07-08). Entry is
-// inclusive (>= from), so QLD is taxable AT its $600k threshold; NSW only above $1.075m.
-// SA is a March-2026 single-threshold approximation - NOT re-verified in the Jul 2026 pass.
+// Land tax scales (banded). NSW/VIC/QLD/WA ported verbatim from the verified LAND_TAX register
+// in the Rental Portfolio dashboard (each read at the state revenue office 2026-07-08). SA general
+// rates verified at RevenueSA 2026-07-10 (2025-26 schedule, threshold $833k, cross-checked). Entry
+// is inclusive (>= from), so QLD is taxable AT its $600k threshold; NSW/SA only above threshold.
 const LAND_TAX = {
   nsw: [ {from:1075001, over:1075000, base:100, rate:0.016}, {from:6571001, over:6571000, base:88036, rate:0.02} ],
   vic: [ {from:50000, over:0, base:500, rate:0}, {from:100000, over:0, base:975, rate:0},
@@ -867,7 +867,8 @@ const LAND_TAX = {
   wa:  [ {from:300001, over:0, base:300, rate:0}, {from:420001, over:420000, base:300, rate:0.0025},
          {from:1000001, over:1000000, base:1750, rate:0.009}, {from:1800001, over:1800000, base:8950, rate:0.018},
          {from:5000001, over:5000000, base:66550, rate:0.02}, {from:11000001, over:11000000, base:186550, rate:0.0267} ],
-  sa:  [ {from:833000, over:833000, base:0, rate:0.005} ],
+  sa:  [ {from:833001, over:833000, base:0, rate:0.005}, {from:1338001, over:1338000, base:2525, rate:0.01},
+         {from:1946001, over:1946000, base:8605, rate:0.02}, {from:3116001, over:3116000, base:32005, rate:0.024} ],
 };
 function landTaxAmt(regKey, lv) {
   const br = LAND_TAX[regKey];

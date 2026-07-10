@@ -109,7 +109,7 @@ As of v3.6 the model uses **full banded scales** (the `LAND_TAX` const), ported 
 | VIC | $50,000 | $500/$975 flat bands, then 0.3%→2.65% marginal from $300k (COVID debt levy folded in, to 2033) | SRO Victoria |
 | QLD | $600,000 | $500 + 1.0%, then 1.65%→2.25% (taxable AT threshold) | Queensland Revenue Office |
 | WA | $300,001 | $300 flat to $420k, then 0.25%→2.67% marginal | RevenueWA |
-| SA | $833,000 | 0.5% single-threshold **approximation** — March-2026 data, NOT re-verified in the Jul 2026 pass; verify at RevenueSA before relying on SA output | RevenueSA (unverified) |
+| SA | $833,000 | $0 + 0.5%, then $2,525 + 1.0% ($1.338m), $8,605 + 2.0% ($1.946m), $32,005 + 2.4% ($3.116m) | RevenueSA 2025-26 general rates, verified 2026-07-10 (cross-checked) |
 | NZ | N/A | No land tax (Land Tax Abolition Act 1990) | — |
 
 Land value modelled as 60% of property value. Portfolio investors use a 2.5x land tax multiplier (crude proxy for aggregated holdings on the general scale).
