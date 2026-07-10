@@ -22,7 +22,7 @@ Neon-dark theme (default) with a Light toggle in the top-right:
 - **Shift cost bearers** -click any cost line to move it between landlord, tenant, and government to explore policy alternatives
 - **Load scenario presets** -2019 baseline, COVID era, 2023 peak, current 2026, QLD cyclone, NZ earthquake
 - **View the 5-year plotter** -compare market trajectory against policy options (illustrative 2% rent cap, CPI-linked cap, rent freeze)
-- **Check rent-to-income** -visual gauge showing housing stress thresholds against regional median household income
+- **Check rent-to-income** -visual gauge showing housing stress thresholds against your household income (defaults to the regional median, adjustable via a slider)
 
 ## The core idea
 

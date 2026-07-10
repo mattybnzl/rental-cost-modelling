@@ -591,6 +591,16 @@ footer a { color: var(--terracotta); text-decoration: none; }
     </div>
   </div>
   <div class="ctrl-row">
+    <div class="slider-grp" style="flex:2;"><label>Household Income <span class="rent-range-hint" id="incHint">(gross, per week)</span></label>
+      <div class="sl-row"><input type="range" id="slIncome" min="825" max="4200" value="1675" step="25" oninput="go()"><span class="sl-val" id="vIncome">$1,675/wk</span></div>
+    </div>
+    <div class="slider-grp" style="display:flex;align-items:flex-end;">
+      <div style="font-size:0.7rem;color:var(--text-light);line-height:1.4;">
+        Gross <strong>household</strong> income. Default = regional median. Drives the rent-to-income / housing-stress bar only.
+      </div>
+    </div>
+  </div>
+  <div class="ctrl-row">
     <div class="slider-grp"><label>Interest Rate Change</label>
       <div class="sl-row"><input type="range" id="slRate" min="-200" max="200" value="0" step="25" oninput="go()"><span class="sl-val" id="vRate">+0.00%</span></div>
     </div>
@@ -1129,6 +1139,12 @@ function go() {
   $('vRent').textContent = '$' + userRent + '/wk';
   $('rentRangeHint').textContent = '($' + Math.round(medRent*0.6) + '–$' + Math.round(medRent*1.4) + ' range)';
 
+  // Household income display (absolute $/wk; default = regional median)
+  const income = +$('slIncome').value;
+  const medInc = R[reg].medInc;
+  $('vIncome').textContent = '$' + income.toLocaleString() + '/wk';
+  $('incHint').textContent = '(' + Math.round(income / medInc * 100) + '% of median)';
+
   const d = calcAll(reg, typ, own, dRate, dIns, dVal, inf, pt, rentPct, dRates);
 
   // Update panel subtitle with rent context
@@ -1617,7 +1633,7 @@ function renderScenarios() {
   // Transform for y-axis mode
   function transformSeries(vals, scenarioId) {
     if (yAxis === 'rent') return vals;
-    if (yAxis === 'rti') return vals.map(v => (v / r.medInc) * 100);
+    if (yAxis === 'rti') { const inc = +$('slIncome').value || r.medInc; return vals.map(v => (v / inc) * 100); }
     if (yAxis === 'cashflow') {
       const costs = series['costs'];
       if (!costs) return vals;
@@ -1854,7 +1870,7 @@ function renderRentIncome(d) {
   const rent = d.aftRent;
   const tBills = sumBearer(d, 'after', 'T') / 52;
   const totalHousing = rent + tBills;
-  const income = r.medInc;
+  const income = +$('slIncome').value || r.medInc;
   const pctRent = (rent / income) * 100;
   const pctTotal = (totalHousing / income) * 100;
   const color = pctTotal < 30 ? 'rib-green' : pctTotal < 40 ? 'rib-amber' : 'rib-red';
@@ -1862,7 +1878,7 @@ function renderRentIncome(d) {
 
   el.innerHTML = `
     <div class="rib-header">
-      <span class="rib-label">Rent-to-Income (median household: $${Math.round(income)}/wk ${r.cur})</span>
+      <span class="rib-label">Rent-to-Income (household $${Math.round(income).toLocaleString()}/wk ${r.cur}${income===r.medInc?', regional median':''})</span>
       <span class="rib-pct">${pctTotal.toFixed(0)}% of income${stress}</span>
     </div>
     <div class="rib-bar-outer">
@@ -1896,6 +1912,17 @@ function toggleBearer(key, val) {
   go();
 }
 
+// Household-income slider spans ~0.5x-2.5x the regional median household income (step $25),
+// re-defaulting to the median whenever the region changes. Drives the rent-to-income bar only.
+function syncIncomeSlider(reg) {
+  const med = R[reg].medInc;
+  const s = $('slIncome');
+  s.min = Math.round(med * 0.5 / 25) * 25;
+  s.max = Math.round(med * 2.5 / 25) * 25;
+  s.step = 25;
+  s.value = med;
+}
+
 let lastRegion = null;
 function regionChanged() {
   const reg = $('selRegion').value;
@@ -1904,6 +1931,7 @@ function regionChanged() {
     initBearers(reg);
     $('slRent').value = 100; // reset rent to median on region change
     $('slRates').value = 0; // reset rates to 0 on region change
+    syncIncomeSlider(reg); // reset income to the new region's median
   }
 }
 
@@ -1929,6 +1957,7 @@ function preset(n) {
   $('slPass').value = p.pt;
   $('slRent').value = 100; // reset rent to median on preset
   if (p.reg) { $('selRegion').value = p.reg; regionChanged(); }
+  syncIncomeSlider($('selRegion').value); // reset income to median on preset
   document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.preset-btn').forEach(b => {
     if (b.textContent === p.lb) b.classList.add('active');
@@ -1936,7 +1965,7 @@ function preset(n) {
   go();
 }
 
-['slRate','slIns','slRates','slCapRes','slVal','slInf','slPass','slRent'].forEach(id =>
+['slRate','slIns','slRates','slCapRes','slVal','slInf','slPass','slRent','slIncome'].forEach(id =>
   $(id).addEventListener('input', () => { actPreset = null; })
 );
 
@@ -1968,6 +1997,7 @@ try { applyTheme(localStorage.getItem('rpm-theme') || 'neon'); } catch(e){ apply
 // Init
 initBearers('qld');
 lastRegion = 'qld';
+syncIncomeSlider('qld');
 go();
 </script>
 </body>
